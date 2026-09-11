@@ -1,0 +1,14 @@
+data/
+*.csv
+*.xlsx
+*.xls
+*.parquet
+*.pkl
+*.pickle
+*.db
+*.sqlite
+*.sqlite3
+*.ipynb_checkpoints/
+__pycache__/
+*.pyc
+.env
