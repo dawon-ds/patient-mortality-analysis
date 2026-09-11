@@ -111,6 +111,4 @@ patient-mortality-analysis/
 ## Notes
 
 - This is a **report-centered portfolio repository**.
-- The original project code is no longer available, so no newly written code is presented as if it were the original implementation.
-- A future reproduction can be added separately and clearly labeled as a later reimplementation.
 - The original patient dataset is intentionally excluded because it contains sensitive real-world medical data.
