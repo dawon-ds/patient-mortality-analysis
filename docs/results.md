@@ -40,11 +40,12 @@ At the same time, the modest ROC-AUC indicates that the available feature set an
 
 ## Limitations
 
-- Imbalanced outcome distribution
+- Imbalanced outcome distribution; this alone does not establish the cause of low non-survivor recall
 - Missing values and incomplete clinical records
 - Potentially irrelevant or noisy variables
 - Limited clinical context around diagnoses and disease severity
 - No external validation cohort
+- Train/test split and training-only estimation of feature thresholds are not documented in the public materials
 - Logistic regression may not capture nonlinear interactions
 - Patient-level source data cannot be publicly released because it contains sensitive medical information
 
@@ -52,6 +53,7 @@ At the same time, the modest ROC-AUC indicates that the available feature set an
 
 Potential extensions include:
 
+- documented patient-level train/test splitting and training-only feature-threshold estimation,
 - stronger missing-data handling,
 - more rigorous feature selection,
 - diagnosis and disease-severity variables,
