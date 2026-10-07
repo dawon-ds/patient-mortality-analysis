@@ -4,7 +4,7 @@
 
 A team project analyzing clinical records from **2,005 cardiac-arrest patients** to explore factors associated with in-hospital mortality. The workflow combines patient-level data integration, exploratory analysis, threshold-based feature engineering, and interpretable classification.
 
-[Portfolio](https://app.notion.com/p/66068564df5a83329dc2012278107120)
+[Portfolio](https://incredible-march-0ef.notion.site/66068564df5a83329dc2012278107120)
 
 ## Project Overview
 
