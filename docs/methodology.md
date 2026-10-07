@@ -14,6 +14,10 @@ The dataset integrated multiple types of clinical information, including demogra
 
 Clinical tables were merged using patient identifiers to build a patient-level analysis table. Because the original data contains real-patient medical information, the raw tables and any patient-level samples are excluded from this public repository.
 
+## Preprocessing
+
+The portfolio describes handling duplicate patients and inconsistent survival information, extracting admission/discharge information, averaging ICU stay per patient, organizing medications by type, and grouping age into 0–30, 30–60, and 60–90.
+
 ## Exploratory Analysis
 
 The project examined distributions and mortality-group differences across several categories of variables, including:
@@ -27,7 +31,7 @@ The project examined distributions and mortality-group differences across severa
 
 ## Feature Engineering
 
-Threshold-based features were created using distribution cutoffs such as the **90th and 10th percentiles** to capture unusually high or low measurements.
+Threshold-based features used the **90th and 10th percentiles** of clinical-variable distributions among non-survivors (`hospital_expire_flag = 1`) to capture unusually high or low measurements.
 
 A derived **metabolic stress** feature combined oxygen-saturation information with extreme mean-glucose behavior to represent joint physiological stress.
 
@@ -42,6 +46,10 @@ The project examined which variables were positively or negatively associated wi
 ### Linear Regression
 
 Linear regression was explored as an alternative continuous scoring approach, but it was considered less appropriate for the binary target than logistic regression.
+
+## Evaluation Documentation
+
+The available public documentation does not specify the train/test split, random seed, or whether percentile thresholds were estimated on training data only. These details must be recovered from the original analysis before claiming reproducible or leakage-free evaluation. Future evaluations should fit preprocessing and thresholds on the training partition, then apply them to held-out patients.
 
 ## Interpretation Principle
 
