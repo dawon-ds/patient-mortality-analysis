@@ -2,113 +2,98 @@
 
 **Clinical Data Visualization & Modeling**
 
-This repository documents a team project that explored clinical factors associated with in-hospital mortality among cardiac-arrest patients through exploratory data analysis, feature engineering, visualization, and classification modeling.
+A team project analyzing clinical records from **2,005 cardiac-arrest patients** to explore factors associated with in-hospital mortality. The workflow combines patient-level data integration, exploratory analysis, threshold-based feature engineering, and interpretable classification.
 
-> **Important:** The original dataset contains sensitive real-patient medical information and is **not included** in this public repository.
+[Portfolio (English)](https://app.notion.com/p/66068564df5a83329dc2012278107120) · [Portfolio (한국어)](https://app.notion.com/p/3d568564df5a8106b931ef2eb591c508)
 
 ## Project Overview
 
-- **Course:** Data Analysis Visualization
-- **Submission date:** November 26, 2024
-- **Task:** Mortality-factor analysis and classification
-- **Dataset size:** 2,005 patients
-- **Target:** `hospital_expire_flag`
-- **Approach:** EDA, feature engineering, logistic regression, result interpretation
+| Item | Description |
+| --- | --- |
+| Course | Data Analysis Visualization |
+| Submission | November 26, 2024 |
+| Project type | Team project |
+| Objective | Explore mortality-associated clinical factors |
+| Dataset | 2,005 cardiac-arrest patients |
+| Target | `hospital_expire_flag` |
+| Technologies | Python, Pandas, NumPy, scikit-learn, Matplotlib |
 
-## Dataset
+## Problem
 
-The project used clinical data from **2,005 cardiac-arrest patients**:
+Which clinical variables differ between survivors and non-survivors, and how well can they distinguish in-hospital mortality?
 
-- **1,147 deceased**
-- **858 survived**
+The analysis examines demographic, treatment, and physiological information together. Its purpose is to interpret patterns in observational data; the findings do not establish causal effects.
 
-The dataset included variables related to:
+## Data & Processing
 
-- demographics,
-- vital signs,
-- laboratory tests,
-- ICU/treatment variables,
-- medications and procedures.
+| Outcome | Patients | Share |
+| --- | ---: | ---: |
+| Non-survivors | 1,147 | 57.2% |
+| Survivors | 858 | 42.8% |
+| Total | 2,005 | 100% |
 
-Records were merged by patient ID for analysis.
+Clinical tables were joined by patient ID to create a patient-level analysis dataset.
 
-### Data Privacy
+- Integrated demographic, admission, procedure, medication, vital-sign, and laboratory records.
+- Handled duplicate records and inconsistent survival outcomes.
+- Summarized admission/discharge information and ICU stay at the patient level.
+- Organized medication records by type and grouped age into 0–30, 30–60, and 60–90.
 
-The original source data contains sensitive medical information from real patients. For privacy and data-governance reasons:
+**Data availability:** This repository contains methodology and aggregate findings. Original patient records, patient-level samples, and identifiers are excluded because the source data contains sensitive medical information.
 
-- no raw patient-level records are published,
-- no sample rows derived from the original dataset are included,
-- no identifiers or potentially re-identifiable fields are exposed,
-- this repository contains only project-level methodology and aggregate findings.
+## Approach
 
-## Analysis Workflow
+### Exploratory Analysis
 
-1. Integrate patient-level clinical tables
-2. Inspect missing values and distributions
-3. Explore mortality-associated variables
-4. Engineer threshold-based features
-5. Build a logistic-regression classifier
-6. Evaluate predictive performance
-7. Interpret variables associated with higher or lower mortality risk
+Initial comparisons covered demographics, procedures, and medications. Uneven race-group sizes limited interpretation of demographic differences. Higher norepinephrine administration was observed among non-survivors, motivating closer examination of treatment and physiological indicators.
 
-See [`docs/methodology.md`](docs/methodology.md) for details.
+The subsequent analysis considered creatinine, electrolytes, urine output, blood pressure, glucose, and oxygen saturation, including indicators related to kidney dysfunction.
 
-## Key Findings
+### Feature Engineering
 
-The analysis suggested several variables were associated with mortality risk:
+Extreme-value flags used the **90th and 10th percentiles** of clinical-variable distributions among non-survivors.
 
-- **Norepinephrine use** appeared more frequently among deceased patients.
-- **Kidney dysfunction / AKI-related indicators** showed meaningful association with mortality.
-- **Glucose-related variables** also showed notable patterns.
-- A derived **metabolic stress** feature combined oxygen-saturation information with extreme mean-glucose values.
-- More stable blood-pressure and oxygen-related measurements were associated with lower predicted mortality risk in the fitted model.
+- High-value flags represented variables such as glucose and norepinephrine.
+- Low-value flags represented oxygen saturation and blood pressure.
+- A **metabolic-stress interaction feature** combined oxygen-saturation information with extreme mean-glucose values.
 
-These findings are **associational**, not causal.
+### Modeling
 
-## Modeling
+Logistic regression was the primary classifier for the binary mortality target. Coefficient directions supported interpretation of the engineered features. Linear regression was also explored as a continuous-score alternative, but was less suitable for binary classification.
 
-### Logistic Regression
+Detailed workflow: [Methodology](docs/methodology.md).
 
-The main classification model achieved approximately:
+## Results
 
-- **Accuracy:** 57.97%
-- **ROC-AUC:** 0.605
-- **Precision for non-survivors:** 0.75
-- **Recall for non-survivors:** 0.37
+| Logistic regression metric | Reported result |
+| --- | ---: |
+| Accuracy | 57.97% |
+| ROC-AUC | 0.605 |
+| Precision — non-survivors | 0.75 |
+| Recall — non-survivors | 0.37 |
 
-The model was used primarily to support interpretation of mortality-associated factors rather than to claim clinically deployable performance.
+High mean glucose, metabolic stress, and high norepinephrine dosage showed positive associations with mortality in the fitted model. More stable blood-pressure and oxygen-related measurements showed negative associations. Renal-function indicators also emerged as relevant exploratory signals.
 
-### Linear Regression
+These are **associations within the analyzed dataset**. For example, greater norepinephrine exposure may reflect illness severity rather than a causal effect of the medication.
 
-A linear-regression alternative was also explored as a continuous-score model, but it was not well suited to the binary mortality-classification objective.
+The modest ROC-AUC and low non-survivor recall limit patient-level prediction. The model supports exploratory interpretation and does not demonstrate clinical readiness.
 
-See [`docs/results.md`](docs/results.md) for the summarized results and limitations.
+Detailed findings: [Results & Limitations](docs/results.md).
 
-## Limitations
+## Limitations & Future Work
 
-Major limitations included:
+- Missing or incomplete records, an imbalanced outcome distribution, and limited clinical context constrain interpretation.
+- The published materials do not specify the train/test split or whether percentile thresholds were estimated using training data only; those details are needed to assess evaluation reliability and possible data leakage.
+- No independent external validation was performed.
+- Future work could improve missing-data handling, add diagnosis and disease-severity information, incorporate time-series trends, and compare nonlinear models.
 
-- class imbalance,
-- missing values,
-- irrelevant or noisy variables,
-- limited model performance,
-- restricted clinical context,
-- lack of external validation.
+## Review
 
-Future work would benefit from improved preprocessing, larger and more representative datasets, diagnosis-level context, post-ICU information, and stronger classification models.
+This project connected clinical-table integration with exploratory analysis, feature engineering, and model interpretation. A key lesson was to evaluate predictive limitations alongside statistical associations, and to distinguish those associations from causal or clinical conclusions.
 
-## Repository Structure
+## Documentation
 
-```text
-patient-mortality-analysis/
-├── README.md
-├── .gitignore
-└── docs/
-    ├── methodology.md
-    └── results.md
-```
+- [Methodology](docs/methodology.md)
+- [Results & Limitations](docs/results.md)
 
-## Notes
-
-- This is a **report-centered portfolio repository**.
-- The original patient dataset is intentionally excluded because it contains sensitive real-world medical data.
+This is a report-centered repository; it does not include the original dataset or an executable reproduction pipeline.
