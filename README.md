@@ -43,6 +43,12 @@ Clinical tables were joined by patient ID to create a patient-level analysis dat
 
 ## Approach
 
+### Analysis Workflow
+
+![Original project analysis workflow](docs/images/analysis-workflow.jpeg)
+
+*Source: original final report, p. 9. This diagram records the team's exploratory reasoning. Its kidney-failure conclusion is a historical hypothesis; the observational analysis does not establish a primary cause of death.*
+
 ### Exploratory Analysis
 
 Initial comparisons covered demographics, procedures, and medications. Uneven race-group sizes limited interpretation of demographic differences. Higher norepinephrine administration was observed among non-survivors, motivating closer examination of treatment and physiological indicators.
@@ -73,6 +79,18 @@ Detailed workflow: [Methodology](docs/methodology.md).
 | ROC-AUC | 0.605 |
 | Precision — non-survivors | 0.75 |
 | Recall — non-survivors | 0.37 |
+
+### Model Coefficients
+
+![Logistic regression coefficient directions](docs/images/logistic-regression-coefficients.png)
+
+*Source: original final report, p. 11. Bars show fitted coefficients, not causal effects.*
+
+### Historical Evaluation
+
+![Original logistic regression classification report and ROC-AUC](docs/images/logistic-regression-evaluation.png)
+
+*Source: original final report, p. 11. Class 0 denotes survivors and class 1 non-survivors. These are original recorded results, not a new run.*
 
 High mean glucose, metabolic stress, and high norepinephrine dosage showed positive associations with mortality in the fitted model. More stable blood-pressure and oxygen-related measurements showed negative associations. Renal-function indicators also emerged as relevant exploratory signals.
 
