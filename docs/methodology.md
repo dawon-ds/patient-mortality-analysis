@@ -16,7 +16,7 @@ Elapsed time is used to order events, not as a learned time embedding. Numerical
 
 ## Evaluation Boundaries
 
-The source describes events within the outcome horizon, so an earlier prediction cutoff must be specified before claiming prospective early-warning performance. Patient overlap across sequence training and validation needs verification. Final experiment code is not present in the recovered exploratory notebook.
+The source describes events within the outcome horizon, so an earlier prediction cutoff must be specified before claiming prospective early-warning performance. Patient overlap across sequence training and validation needs verification. Final experiment notebooks are now available in notebooks/final. They are preserved historical workflows, not independently rerun results. The sequence code splits text/label records rather than explicitly grouping admissions by patient.
 
 ## Earlier Analysis
 

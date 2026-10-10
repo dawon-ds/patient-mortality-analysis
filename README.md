@@ -15,14 +15,13 @@ A team project exploring patient mortality, culminating in a final comparison of
 | Reported partition | 1,615 training patients / 390 test patients |
 | Models | XGBoost, logistic regression, BERT, RoBERTa |
 | Final report | December 1, 2024 |
-| Available code | Earlier exploratory in-hospital mortality analysis |
-| Final experiment status | Documented in report and presentation; final training code is not in the recovered notebook |
+| Available code | Final tabular modeling, sequence preprocessing, BERT/RoBERTa training and evaluation; earlier exploratory analysis |
+| Final experiment status | Original final notebooks recovered; historical metrics have not been rerun |
 
 ## Data Integration
 
 ![Clinical table structure](docs/images/final/data-tables.jpg)
 
-*Final presentation, slide 4.*
 
 Admission, ICU, demographic, medication, procedure, and chart-event tables were joined using `subject_id` and `hadm_id`. Item dictionaries supplied categories and labels. Clinical events were sorted by their timestamps and consolidated into patient/admission records.
 
@@ -38,7 +37,6 @@ XGBoost and logistic regression were tuned using grid search and five-fold cross
 
 ![BERT event-sequence classification](docs/images/final/event-sequence-model.jpg)
 
-*Final presentation, slide 27.*
 
 Chronologically ordered event types and item labels were serialized into text. BERT and RoBERTa were fine-tuned with learning rate `2e-5`, batch size `16`, `10` epochs, and weight decay `0.01`; checkpoints were selected using validation F1.
 
@@ -48,7 +46,6 @@ The report describes 6,478 training admissions from 1,615 patients and 390 test 
 
 ![Final model comparison](docs/images/final/final-model-comparison.jpg)
 
-*Final presentation, slide 29. Historical reported results, not a new execution.*
 
 | Model | Validation accuracy | Validation F1 | Test accuracy | Test F1 |
 | --- | ---: | ---: | ---: | ---: |
@@ -63,11 +60,9 @@ The final summary reports the strongest test result for XGBoost and substantial 
 
 ![Final logistic regression coefficients](docs/images/final/final-logistic-coefficients.jpg)
 
-*Final presentation, slide 17. Coefficients represent fitted associations.*
 
 ![Final XGBoost feature importance](docs/images/final/final-xgboost-importance.jpg)
 
-*Final presentation, slide 18. Feature importance does not establish clinical causation.*
 
 ## Limitations
 
@@ -78,9 +73,28 @@ The final summary reports the strongest test result for XGBoost and substantial 
 - The final summary repeats tabular validation/test values and differs from earlier baseline slides. Original logs are needed to resolve these discrepancies.
 - No external validation or new metric reproduction is claimed.
 
+## Final Code
+
+| Notebook | Purpose |
+| --- | --- |
+| [Tabular modeling](notebooks/final/tabular_modeling.ipynb) | Clinical-table integration, 120-hour target construction, EDA, feature processing, XGBoost/logistic regression and comparison models |
+| [Sequence training-data preprocessing](notebooks/final/sequence_preprocessing_train.ipynb) | Event timelines, time-window filtering, item mapping, training text preparation |
+| [Sequence test-data preprocessing](notebooks/final/sequence_preprocessing_test.ipynb) | Last-admission selection and test text preparation |
+| [Sequence training and evaluation](notebooks/final/sequence_training_evaluation.ipynb) | BERT/RoBERTa fine-tuning and evaluation |
+
+[Setup and execution order](docs/execution.md) · [Data security policy](docs/data-security.md)
+
+## Data Security
+
+**Patient-level data is strictly excluded from this public repository.** Clinical CSVs contain sensitive health records, patient/admission identifiers, timestamps, treatments, and outcomes. Even de-identified records remain subject to source access and data-use restrictions; de-identification does not authorize redistribution.
+
+Raw and processed patient CSVs, patient-level JSON/event text, notebook outputs, dataset archives, and locally generated model artifacts are not published. Access to source data must be obtained independently through the authorized provider and used only in an approved private environment. Do not commit data, submit records in issues, or share screenshots containing patient information.
+
+The repository publishes source code and aggregate presentation figures only. All recovered notebooks have stored outputs, execution counts, attachments, and cell metadata removed. `.gitignore` provides an additional guard against accidental inclusion of clinical data and artifacts.
+
 ## Code and Earlier Analysis
 
-The recovered notebook analyzes **in-hospital mortality**; it does not implement the final 120-hour XGBoost/BERT comparison. The earlier 57.97% accuracy and 0.605 ROC-AUC belong to that exploratory stage.
+The earlier exploratory notebook analyzes **in-hospital mortality**; it does not implement the final 120-hour XGBoost/BERT comparison. The earlier 57.97% accuracy and 0.605 ROC-AUC belong to that exploratory stage.
 
 - [Original exploratory notebook](notebooks/original_analysis.ipynb)
 - [Earlier logistic-regression experiment](notebooks/mortality_modeling.ipynb)
@@ -93,7 +107,7 @@ pip install -r requirements.txt
 jupyter notebook
 ```
 
-For the earlier model notebook, place the authorized prepared CSV at `data/testing_h.csv` and run from the `notebooks` directory. The original archive retains Colab paths and historical cell order; stored outputs and metadata are removed. This setup runs the earlier experiment only. Patient-level records are excluded.
+For the earlier model notebook, place the authorized prepared CSV at `data/testing_h.csv` and run from the `notebooks` directory. The original archive retains Colab paths and historical cell order; stored outputs and metadata are removed. This setup runs the earlier experiment only. Final experiment instructions are in [Setup and execution order](docs/execution.md). Patient-level records are excluded.
 
 ## Review
 

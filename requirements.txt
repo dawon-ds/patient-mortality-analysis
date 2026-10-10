@@ -5,3 +5,10 @@ seaborn
 scikit-learn
 imbalanced-learn
 jupyter
+scipy
+xgboost
+tqdm
+dython
+torch
+transformers
+accelerate
