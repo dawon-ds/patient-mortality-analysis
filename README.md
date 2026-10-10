@@ -16,7 +16,6 @@ A team project exploring patient mortality, culminating in a final comparison of
 | Models | XGBoost, logistic regression, BERT, RoBERTa |
 | Final report | December 1, 2024 |
 | Available code | Final tabular modeling, sequence preprocessing, BERT/RoBERTa training and evaluation; earlier exploratory analysis |
-| Final experiment status | Original final notebooks recovered; historical metrics have not been rerun |
 
 ## Data Integration
 
@@ -71,7 +70,7 @@ The final summary reports the strongest test result for XGBoost and substantial 
 - Patient-group separation in the sequence train/validation split is not established by the report.
 - Quantitative clinical values and elapsed-time embeddings were not fully incorporated into the sequence models; 512-token truncation limits long histories.
 - The final summary repeats tabular validation/test values and differs from earlier baseline slides. Original logs are needed to resolve these discrepancies.
-- No external validation or new metric reproduction is claimed.
+- External validation is a direction for future work.
 
 ## Final Code
 
@@ -90,7 +89,7 @@ The final summary reports the strongest test result for XGBoost and substantial 
 
 Raw and processed patient CSVs, patient-level JSON/event text, notebook outputs, dataset archives, and locally generated model artifacts are not published. Access to source data must be obtained independently through the authorized provider and used only in an approved private environment. Do not commit data, submit records in issues, or share screenshots containing patient information.
 
-The repository publishes source code and aggregate presentation figures only. All recovered notebooks have stored outputs, execution counts, attachments, and cell metadata removed. `.gitignore` provides an additional guard against accidental inclusion of clinical data and artifacts.
+The repository publishes source code and aggregate presentation figures only. All published notebooks have stored outputs, execution counts, attachments, and cell metadata removed. `.gitignore` provides an additional guard against accidental inclusion of clinical data and artifacts.
 
 ## Code and Earlier Analysis
 
@@ -107,7 +106,7 @@ pip install -r requirements.txt
 jupyter notebook
 ```
 
-For the earlier model notebook, place the authorized prepared CSV at `data/testing_h.csv` and run from the `notebooks` directory. The original archive retains Colab paths and historical cell order; stored outputs and metadata are removed. This setup runs the earlier experiment only. Final experiment instructions are in [Setup and execution order](docs/execution.md). Patient-level records are excluded.
+For the earlier model notebook, place the authorized prepared CSV at `data/testing_h.csv` and run from the `notebooks` directory. The original archive retains Colab paths and original cell order; stored outputs and metadata are removed. This setup runs the earlier experiment only. Final experiment instructions are in [Setup and execution order](docs/execution.md). Patient-level records are excluded.
 
 ## Review
 

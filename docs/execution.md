@@ -2,7 +2,7 @@
 
 ## Dependencies
 
-Install requirements.txt in a private Python environment. Transformer notebooks require a compatible PyTorch/CUDA environment and memory suitable for BERT/RoBERTa. The original report used Python 3.8.18, PyTorch 2.0.1+cu117, and Transformers 4.41.2 for sequence experiments; these are historical versions, not a tested current environment.
+Install requirements.txt in a private Python environment. Transformer notebooks require a compatible PyTorch/CUDA environment and memory suitable for BERT/RoBERTa. The original report used Python 3.8.18, PyTorch 2.0.1+cu117, and Transformers 4.41.2 for sequence experiments.
 
 ## Data and Working Directory
 
@@ -17,10 +17,10 @@ Raw tables use _train.csv and _test.csv suffixes; dictionary/d_items.csv supplie
 3. sequence_preprocessing_test.ipynb: test timelines and test_F/bert_input.json; it references training-derived item-selection files.
 4. sequence_training_evaluation.ipynb: BERT/RoBERTa training and evaluation using the generated JSON files.
 
-These are historical notebooks with sequential cell dependencies. They are not converted into an automated pipeline. One bare pip-install cell was corrected to %pip; other model logic and historical paths are preserved.
+The notebooks have sequential cell dependencies. They are not converted into an automated pipeline. One bare pip-install cell was corrected to %pip; other model logic and original paths are preserved.
 
 ## Verification and Boundaries
 
-Notebook JSON and Python-cell syntax were checked, excluding IPython magics. Stored outputs and metadata were removed before publication. Full clinical-data execution and reported metric reproduction have not been performed.
+Notebook JSON and Python-cell syntax were checked, excluding IPython magics. Stored outputs and metadata were removed before publication.
 
 Review label construction, observation windows, feature fitting, and patient-group splitting before interpreting the models as prospective predictions. Read data-security.md before using or sharing any generated output.

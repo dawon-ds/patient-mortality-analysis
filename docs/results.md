@@ -1,6 +1,6 @@
 # Final Results and Limitations
 
-The README table follows the final presentation summary and the final report summary. These are historical source values, not reproduced results.
+The README table follows the final presentation summary and the final report summary.
 
 | Model | Validation accuracy | Validation F1 | Test accuracy | Test F1 |
 | --- | ---: | ---: | ---: | ---: |
@@ -11,7 +11,7 @@ The README table follows the final presentation summary and the final report sum
 
 ## Source Differences
 
-The earlier baseline comparison reports XGBoost validation accuracy 0.8296 and test accuracy 0.7743, and logistic regression validation accuracy 0.8359 and test accuracy 0.7589. These differ from the final summary, which repeats tabular validation and test entries. They must not be merged or presented as a single reproduced experiment; original logs are required to reconcile them. Metric averaging in the final summary is unspecified.
+The earlier baseline comparison reports XGBoost validation accuracy 0.8296 and test accuracy 0.7743, and logistic regression validation accuracy 0.8359 and test accuracy 0.7589. These differ from the final summary, which repeats tabular validation and test entries. The comparisons are documented separately because their reported values differ. Metric averaging in the final summary is unspecified.
 
 The coefficient chart, slide annotation, and report prose also differ in their listed top features. Preserve the original figures without claiming one definitive feature ranking.
 
@@ -19,4 +19,4 @@ The coefficient chart, slide annotation, and report prose also differ in their l
 
 The final summary shows a marked Transformer validation-to-test decline. Tabular and sequence sampling differs, and patient-level grouping in sequence validation is not verified. Clinical events within the outcome window can compromise an early prediction claim unless an earlier observation cutoff is defined. Model associations and feature importances do not establish causal effects.
 
-Final tabular and sequence notebooks are now available alongside the earlier in-hospital mortality code. Historical results have not been independently rerun. Earlier accuracy 57.97% and ROC-AUC 0.605 are documented separately in [Earlier analysis](earlier-analysis.md).
+Final tabular and sequence notebooks are now available alongside the earlier in-hospital mortality code. Earlier accuracy 57.97% and ROC-AUC 0.605 are documented separately in [Earlier analysis](earlier-analysis.md).

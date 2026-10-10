@@ -16,8 +16,8 @@ Elapsed time is used to order events, not as a learned time embedding. Numerical
 
 ## Evaluation Boundaries
 
-The source describes events within the outcome horizon, so an earlier prediction cutoff must be specified before claiming prospective early-warning performance. Patient overlap across sequence training and validation needs verification. Final experiment notebooks are now available in notebooks/final. They are preserved historical workflows, not independently rerun results. The sequence code splits text/label records rather than explicitly grouping admissions by patient.
+The source describes events within the outcome horizon, so an earlier prediction cutoff must be specified before claiming prospective early-warning performance. Patient overlap across sequence training and validation needs verification. Final experiment notebooks are now available in notebooks/final. The sequence code splits text/label records rather than explicitly grouping admissions by patient.
 
 ## Earlier Analysis
 
-[Earlier analysis documentation](earlier-analysis.md) describes the recovered in-hospital mortality notebook, its 70:30 split, SMOTE, and outcome-informed thresholds computed before splitting. This is distinct from the final 120-hour model comparison.
+[Earlier analysis documentation](earlier-analysis.md) describes the earlier in-hospital mortality notebook, its 70:30 split, SMOTE, and outcome-informed thresholds computed before splitting. This is distinct from the final 120-hour model comparison.
