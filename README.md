@@ -16,7 +16,7 @@ A team project analyzing clinical records from **2,005 cardiac-arrest patients**
 | Objective | Explore mortality-associated clinical factors |
 | Dataset | 2,005 cardiac-arrest patients |
 | Target | `hospital_expire_flag` |
-| Technologies | Python, Pandas, NumPy, scikit-learn, Matplotlib |
+| Technologies | Python, Pandas, NumPy, scikit-learn, imbalanced-learn, Matplotlib, Seaborn |
 
 ## Problem
 
@@ -39,7 +39,7 @@ Clinical tables were joined by patient ID to create a patient-level analysis dat
 - Summarized admission/discharge information and ICU stay at the patient level.
 - Organized medication records by type and grouped age into 0–30, 30–60, and 60–90.
 
-**Data availability:** This repository contains methodology and aggregate findings. Original patient records, patient-level samples, and identifiers are excluded because the source data contains sensitive medical information.
+**Data availability:** This repository contains recovered analysis code, methodology, and aggregate findings. Original patient records, patient-level samples, and identifiers are excluded because the source data contains sensitive medical information.
 
 ## Approach
 
@@ -55,11 +55,13 @@ Extreme-value flags used the **90th and 10th percentiles** of clinical-variable 
 
 - High-value flags represented variables such as glucose and norepinephrine.
 - Low-value flags represented oxygen saturation and blood pressure.
-- A **metabolic-stress interaction feature** combined oxygen-saturation information with extreme mean-glucose values.
+- A **metabolic-stress interaction feature** is calculated as `mean_sao2 * mean_glucose`.
 
 ### Modeling
 
 Logistic regression was the primary classifier for the binary mortality target. Coefficient directions supported interpretation of the engineered features. Linear regression was also explored as a continuous-score alternative, but was less suitable for binary classification.
+
+The recovered final experiment uses a stratified 70:30 train/test split (`random_state=42`), SMOTE on the training partition, StandardScaler fitted on the resampled training partition, and `LogisticRegression(max_iter=1000, class_weight='balanced')`.
 
 Detailed workflow: [Methodology](docs/methodology.md).
 
@@ -83,7 +85,7 @@ Detailed findings: [Results & Limitations](docs/results.md).
 ## Limitations & Future Work
 
 - Missing or incomplete records, an imbalanced outcome distribution, and limited clinical context constrain interpretation.
-- The published materials do not specify the train/test split or whether percentile thresholds were estimated using training data only; those details are needed to assess evaluation reliability and possible data leakage.
+- The recovered code calculates percentile thresholds from all non-survivors before the train/test split. This introduces outcome-informed information from the test partition; future evaluation should estimate thresholds using training patients only.
 - No independent external validation was performed.
 - Future work could improve missing-data handling, add diagnosis and disease-severity information, incorporate time-series trends, and compare nonlinear models.
 
@@ -96,4 +98,18 @@ This project connected clinical-table integration with exploratory analysis, fea
 - [Methodology](docs/methodology.md)
 - [Results & Limitations](docs/results.md)
 
-This is a report-centered repository; it does not include the original dataset or an executable reproduction pipeline.
+## Code & Setup
+
+- [Original analysis notebook](notebooks/original_analysis.ipynb): recovered preprocessing, exploratory plots, and model experiments. Original Colab paths and historical cell order are preserved; stored outputs and cell metadata are removed.
+- [Final logistic-regression notebook](notebooks/mortality_modeling.ipynb): the recovered final experiment isolated for use with the prepared model-input table.
+
+```bash
+pip install -r requirements.txt
+jupyter notebook
+```
+
+Place the authorized prepared model-input CSV at `data/testing_h.csv`, then open `notebooks/mortality_modeling.ipynb` and run its cells with the notebook directory as the working directory. The owner confirmed the supplied model-input file corresponds to this analysis. The CSV requires the clinical columns referenced in the notebook and `hospital_expire_flag`; patient records are not distributed.
+
+The original notebook references raw clinical tables and `preprocessing_data(fixed).zip` under `/content/`. It is a historical analysis archive, not a single clean end-to-end pipeline. Adapt those paths and provide the intermediate files before running its exploratory sections.
+
+The reported metrics above are from the original report. The recovered code has not been rerun to reproduce them.
