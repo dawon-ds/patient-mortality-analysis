@@ -17,6 +17,8 @@
 | Precision (non-survivor class) | 0.75 |
 | Recall (non-survivor class) | 0.37 |
 
+These are historical report metrics; the recovered code has not been rerun to reproduce them.
+
 The model showed limited predictive performance, so the project used it mainly as an interpretable analysis tool rather than as a clinically deployable predictor.
 
 ## Variables Highlighted in the Analysis
@@ -45,7 +47,7 @@ At the same time, the modest ROC-AUC indicates that the available feature set an
 - Potentially irrelevant or noisy variables
 - Limited clinical context around diagnoses and disease severity
 - No external validation cohort
-- Train/test split and training-only estimation of feature thresholds are not documented in the public materials
+- Outcome-informed percentile thresholds are computed before the 70:30 train/test split in the recovered code
 - Logistic regression may not capture nonlinear interactions
 - Patient-level source data cannot be publicly released because it contains sensitive medical information
 
