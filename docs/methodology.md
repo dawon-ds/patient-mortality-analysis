@@ -1,56 +1,23 @@
-# Methodology
+# Final Methodology
 
-## Objective
+## Task and Data
 
-The project aimed to identify clinical variables associated with in-hospital mortality among cardiac-arrest patients and to summarize those relationships through visualization and statistical modeling.
+The final presentation defines mortality within 120 hours of admission as the target. Clinical tables are integrated by patient and admission IDs, with dictionaries mapping item IDs to categories and labels. Events are sorted chronologically and transformed through JSON into structured CSV records.
 
-## Cohort
+## Tabular Models
 
-The analysis covered **2,005 patients** with a binary target variable, `hospital_expire_flag`.
+Features include demographics, weight, average ICU stay, label-use indicators, event counts, and average durations. The report describes removing columns with over 80% missing values and constant columns, and excluding hospital_expire_flag and survival_hours from predictors. XGBoost and logistic regression use grid search and five-fold cross-validation.
 
-The dataset integrated multiple types of clinical information, including demographics, vital signs, laboratory measurements, medications, ICU/treatment variables, and procedures.
+## Sequence Models
 
-## Data Integration
+BERT and RoBERTa classify text formed by concatenating event types and item labels. The report uses 6,478 training admissions and each test patient's last admission (390 records). The training data is split 80:20 for validation. Learning rate is 2e-5, batch size 16, epochs 10, weight decay 0.01, and maximum sequence length 512 tokens.
 
-Clinical tables were merged using patient identifiers to build a patient-level analysis table. Because the original data contains real-patient medical information, the raw tables and any patient-level samples are excluded from this public repository.
+Elapsed time is used to order events, not as a learned time embedding. Numerical values are not fully represented in model input.
 
-## Preprocessing
+## Evaluation Boundaries
 
-The portfolio describes handling duplicate patients and inconsistent survival information, extracting admission/discharge information, averaging ICU stay per patient, organizing medications by type, and grouping age into 0–30, 30–60, and 60–90.
+The source describes events within the outcome horizon, so an earlier prediction cutoff must be specified before claiming prospective early-warning performance. Patient overlap across sequence training and validation needs verification. Final experiment code is not present in the recovered exploratory notebook.
 
-## Exploratory Analysis
+## Earlier Analysis
 
-The project examined distributions and mortality-group differences across several categories of variables, including:
-
-- hemodynamic measurements,
-- oxygen-related measurements,
-- glucose measurements,
-- renal-function indicators,
-- medication exposure,
-- treatment-related variables.
-
-## Feature Engineering
-
-Threshold-based features used the **90th and 10th percentiles** of clinical-variable distributions among non-survivors (`hospital_expire_flag = 1`) to capture unusually high or low measurements.
-
-A derived **metabolic stress** feature is calculated as `mean_sao2 * mean_glucose` to represent joint physiological stress.
-
-## Modeling
-
-### Logistic Regression
-
-Logistic regression was used as the primary classification model because it provides both a binary prediction framework and interpretable coefficient directions for feature analysis.
-
-The project examined which variables were positively or negatively associated with the mortality target while also evaluating overall classification performance.
-
-### Linear Regression
-
-Linear regression was explored as an alternative continuous scoring approach, but it was considered less appropriate for the binary target than logistic regression.
-
-## Evaluation Documentation
-
-The recovered final experiment uses a stratified 70:30 split with `random_state=42`, SMOTE on the training partition, StandardScaler fitted to the resampled training partition, and logistic regression with `max_iter=1000` and `class_weight='balanced'`. Percentile thresholds are calculated using all non-survivors before splitting, so the test partition influences feature construction. The historical evaluation is therefore not leakage-free. Future evaluations should fit preprocessing and thresholds on the training partition, then apply them to held-out patients.
-
-## Interpretation Principle
-
-The project reports **associations rather than causal effects**. For example, higher norepinephrine exposure among deceased patients may reflect underlying illness severity and should not be interpreted as evidence that norepinephrine itself causes mortality.
+[Earlier analysis documentation](earlier-analysis.md) describes the recovered in-hospital mortality notebook, its 70:30 split, SMOTE, and outcome-informed thresholds computed before splitting. This is distinct from the final 120-hour model comparison.

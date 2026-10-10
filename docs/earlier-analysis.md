@@ -1,0 +1,60 @@
+# Earlier In-Hospital Mortality Analysis
+
+Historical report: November 26, 2024. Target: hospital_expire_flag. Reported cohort: 2,005 patients (1,147 deceased / 858 survivors). Accuracy: 57.97%; ROC-AUC: 0.605; non-survivor precision: 0.75; recall: 0.37. These are distinct from the final 120-hour prediction results.
+
+# Methodology
+
+## Objective
+
+The project aimed to identify clinical variables associated with in-hospital mortality among cardiac-arrest patients and to summarize those relationships through visualization and statistical modeling.
+
+## Cohort
+
+The analysis covered **2,005 patients** with a binary target variable, `hospital_expire_flag`.
+
+The dataset integrated multiple types of clinical information, including demographics, vital signs, laboratory measurements, medications, ICU/treatment variables, and procedures.
+
+## Data Integration
+
+Clinical tables were merged using patient identifiers to build a patient-level analysis table. Because the original data contains real-patient medical information, the raw tables and any patient-level samples are excluded from this public repository.
+
+## Preprocessing
+
+The portfolio describes handling duplicate patients and inconsistent survival information, extracting admission/discharge information, averaging ICU stay per patient, organizing medications by type, and grouping age into 0–30, 30–60, and 60–90.
+
+## Exploratory Analysis
+
+The project examined distributions and mortality-group differences across several categories of variables, including:
+
+- hemodynamic measurements,
+- oxygen-related measurements,
+- glucose measurements,
+- renal-function indicators,
+- medication exposure,
+- treatment-related variables.
+
+## Feature Engineering
+
+Threshold-based features used the **90th and 10th percentiles** of clinical-variable distributions among non-survivors (`hospital_expire_flag = 1`) to capture unusually high or low measurements.
+
+A derived **metabolic stress** feature is calculated as `mean_sao2 * mean_glucose` to represent joint physiological stress.
+
+## Modeling
+
+### Logistic Regression
+
+Logistic regression was used as the primary classification model because it provides both a binary prediction framework and interpretable coefficient directions for feature analysis.
+
+The project examined which variables were positively or negatively associated with the mortality target while also evaluating overall classification performance.
+
+### Linear Regression
+
+Linear regression was explored as an alternative continuous scoring approach, but it was considered less appropriate for the binary target than logistic regression.
+
+## Evaluation Documentation
+
+The recovered final experiment uses a stratified 70:30 split with `random_state=42`, SMOTE on the training partition, StandardScaler fitted to the resampled training partition, and logistic regression with `max_iter=1000` and `class_weight='balanced'`. Percentile thresholds are calculated using all non-survivors before splitting, so the test partition influences feature construction. The historical evaluation is therefore not leakage-free. Future evaluations should fit preprocessing and thresholds on the training partition, then apply them to held-out patients.
+
+## Interpretation Principle
+
+The project reports **associations rather than causal effects**. For example, higher norepinephrine exposure among deceased patients may reflect underlying illness severity and should not be interpreted as evidence that norepinephrine itself causes mortality.

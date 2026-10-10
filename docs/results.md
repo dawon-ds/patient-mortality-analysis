@@ -1,65 +1,22 @@
-# Results
+# Final Results and Limitations
 
-## Cohort Summary
+The README table follows final presentation slide 29 and the final report summary. These are historical source values, not reproduced results.
 
-| Outcome | Patients |
-| --- | ---: |
-| Deceased | 1,147 |
-| Survived | 858 |
-| Total | 2,005 |
+| Model | Validation accuracy | Validation F1 | Test accuracy | Test F1 |
+| --- | ---: | ---: | ---: | ---: |
+| XGBoost | 0.7692 | 0.77 | 0.7692 | 0.77 |
+| Logistic regression | 0.7282 | 0.72 | 0.7282 | 0.72 |
+| BERT | 0.9136 | 0.8904 | 0.7231 | 0.6566 |
+| RoBERTa | 0.9128 | 0.8712 | 0.6769 | 0.5465 |
 
-## Logistic Regression Performance
+## Source Differences
 
-| Metric | Result |
-| --- | ---: |
-| Accuracy | ~57.97% |
-| ROC-AUC | ~0.605 |
-| Precision (non-survivor class) | 0.75 |
-| Recall (non-survivor class) | 0.37 |
+Earlier baseline slide 16 reports XGBoost validation accuracy 0.8296 and test accuracy 0.7743, and logistic regression validation accuracy 0.8359 and test accuracy 0.7589. These differ from the final summary, which repeats tabular validation and test entries. They must not be merged or presented as a single reproduced experiment; original logs are required to reconcile them. Metric averaging in the final summary is unspecified.
 
-These are historical report metrics; the recovered code has not been rerun to reproduce them.
+The coefficient chart, slide annotation, and report prose also differ in their listed top features. Preserve the original figures without claiming one definitive feature ranking.
 
-The model showed limited predictive performance, so the project used it mainly as an interpretable analysis tool rather than as a clinically deployable predictor.
+## Interpretation and Limits
 
-## Variables Highlighted in the Analysis
+The final summary shows a marked Transformer validation-to-test decline. Tabular and sequence sampling differs, and patient-level grouping in sequence validation is not verified. Clinical events within the outcome window can compromise an early prediction claim unless an earlier observation cutoff is defined. Model associations and feature importances do not establish causal effects.
 
-The project materials identified several patterns associated with mortality:
-
-- higher mean-glucose values,
-- the engineered metabolic-stress feature,
-- higher norepinephrine-related signals,
-- renal dysfunction / AKI-related variables.
-
-More stable blood-pressure and oxygen-related measurements were associated with lower modeled mortality risk.
-
-These relationships should be interpreted as **associations within this dataset**, not causal effects.
-
-## Interpretation
-
-The analysis suggests that mortality risk is reflected across multiple physiological systems rather than by a single variable. In particular, metabolic, renal, hemodynamic, and treatment-related features all contributed useful signals.
-
-At the same time, the modest ROC-AUC indicates that the available feature set and modeling approach were insufficient for strong patient-level prediction.
-
-## Limitations
-
-- Imbalanced outcome distribution; this alone does not establish the cause of low non-survivor recall
-- Missing values and incomplete clinical records
-- Potentially irrelevant or noisy variables
-- Limited clinical context around diagnoses and disease severity
-- No external validation cohort
-- Outcome-informed percentile thresholds are computed before the 70:30 train/test split in the recovered code
-- Logistic regression may not capture nonlinear interactions
-- Patient-level source data cannot be publicly released because it contains sensitive medical information
-
-## Future Work
-
-Potential extensions include:
-
-- documented patient-level train/test splitting and training-only feature-threshold estimation,
-- stronger missing-data handling,
-- more rigorous feature selection,
-- diagnosis and disease-severity variables,
-- post-ICU outcomes,
-- nonlinear models,
-- class-imbalance handling,
-- external validation on an independent cohort.
+The recovered code supports an earlier in-hospital mortality experiment, not the final model comparison. Earlier accuracy 57.97% and ROC-AUC 0.605 are documented separately in [Earlier analysis](earlier-analysis.md).

@@ -1,8 +1,8 @@
-# Patient Mortality Factor Analysis
+# Patient Mortality Prediction with MIMIC Data
 
-**Clinical Data Visualization & Modeling**
+**Clinical data integration, tabular modeling, and event-sequence classification**
 
-A team project analyzing clinical records from **2,005 cardiac-arrest patients** to explore factors associated with in-hospital mortality. The workflow combines patient-level data integration, exploratory analysis, threshold-based feature engineering, and interpretable classification.
+A team project exploring patient mortality, culminating in a final comparison of models predicting **death within 120 hours of admission**. The final presentation compares XGBoost and logistic regression with BERT and RoBERTa applied to chronological clinical-event text.
 
 [Portfolio](https://incredible-march-0ef.notion.site/66068564df5a83329dc2012278107120)
 
@@ -10,124 +10,91 @@ A team project analyzing clinical records from **2,005 cardiac-arrest patients**
 
 | Item | Description |
 | --- | --- |
-| Course | Data Analysis Visualization |
-| Submission | November 26, 2024 |
-| Project type | Team project |
-| Objective | Explore mortality-associated clinical factors |
-| Dataset | 2,005 cardiac-arrest patients |
-| Target | `hospital_expire_flag` |
-| Technologies | Python, Pandas, NumPy, scikit-learn, imbalanced-learn, Matplotlib, Seaborn |
+| Final objective | Predict mortality within 120 hours of admission |
+| Data | MIMIC clinical records and item dictionaries |
+| Reported partition | 1,615 training patients / 390 test patients |
+| Models | XGBoost, logistic regression, BERT, RoBERTa |
+| Final report | December 1, 2024 |
+| Available code | Earlier exploratory in-hospital mortality analysis |
+| Final experiment status | Documented in report and presentation; final training code is not in the recovered notebook |
 
-## Problem
+## Data Integration
 
-Which clinical variables differ between survivors and non-survivors, and how well can they distinguish in-hospital mortality?
+![Clinical table structure](docs/images/final/data-tables.jpg)
 
-The analysis examines demographic, treatment, and physiological information together. Its purpose is to interpret patterns in observational data; the findings do not establish causal effects.
+*Final presentation, slide 4.*
 
-## Data & Processing
-
-| Outcome | Patients | Share |
-| --- | ---: | ---: |
-| Non-survivors | 1,147 | 57.2% |
-| Survivors | 858 | 42.8% |
-| Total | 2,005 | 100% |
-
-Clinical tables were joined by patient ID to create a patient-level analysis dataset.
-
-- Integrated demographic, admission, procedure, medication, vital-sign, and laboratory records.
-- Handled duplicate records and inconsistent survival outcomes.
-- Summarized admission/discharge information and ICU stay at the patient level.
-- Organized medication records by type and grouped age into 0–30, 30–60, and 60–90.
-
-**Data availability:** This repository contains recovered analysis code, methodology, and aggregate findings. Original patient records, patient-level samples, and identifiers are excluded because the source data contains sensitive medical information.
+Admission, ICU, demographic, medication, procedure, and chart-event tables were joined using `subject_id` and `hadm_id`. Item dictionaries supplied categories and labels. Clinical events were sorted by their timestamps and consolidated into patient/admission records.
 
 ## Approach
 
-### Analysis Workflow
+### Tabular Features and Models
 
-![Original project analysis workflow](docs/images/analysis-workflow.jpeg)
+The final report describes label-use indicators, event counts, average durations, ICU length of stay, and demographics. It reports 5,240 initial columns, removal of highly missing and constant columns, and approximately 3,900 final features. `hospital_expire_flag` and `survival_hours` were excluded as predictors of `Dead_within_120_hours`.
 
-*Source: original final report, p. 9. This diagram records the team's exploratory reasoning. Its kidney-failure conclusion is a historical hypothesis; the observational analysis does not establish a primary cause of death.*
+XGBoost and logistic regression were tuned using grid search and five-fold cross-validation. The training partition was split 80:20 for training and validation. Additional tree, SVM, boosting, and KNN comparisons were presented.
 
-### Exploratory Analysis
+### Clinical Event Sequences
 
-Initial comparisons covered demographics, procedures, and medications. Uneven race-group sizes limited interpretation of demographic differences. Higher norepinephrine administration was observed among non-survivors, motivating closer examination of treatment and physiological indicators.
+![BERT event-sequence classification](docs/images/final/event-sequence-model.jpg)
 
-The subsequent analysis considered creatinine, electrolytes, urine output, blood pressure, glucose, and oxygen saturation, including indicators related to kidney dysfunction.
+*Final presentation, slide 27.*
 
-### Feature Engineering
+Chronologically ordered event types and item labels were serialized into text. BERT and RoBERTa were fine-tuned with learning rate `2e-5`, batch size `16`, `10` epochs, and weight decay `0.01`; checkpoints were selected using validation F1.
 
-Extreme-value flags used the **90th and 10th percentiles** of clinical-variable distributions among non-survivors.
+The report describes 6,478 training admissions from 1,615 patients and 390 test admissions, using each test patient's last admission. Inputs were limited to 512 tokens. Elapsed time ordered events but was not implemented as a separate time embedding.
 
-- High-value flags represented variables such as glucose and norepinephrine.
-- Low-value flags represented oxygen saturation and blood pressure.
-- A **metabolic-stress interaction feature** is calculated as `mean_sao2 * mean_glucose`.
+## Final Results
 
-### Modeling
+![Final model comparison](docs/images/final/final-model-comparison.jpg)
 
-Logistic regression was the primary classifier for the binary mortality target. Coefficient directions supported interpretation of the engineered features. Linear regression was also explored as a continuous-score alternative, but was less suitable for binary classification.
+*Final presentation, slide 29. Historical reported results, not a new execution.*
 
-The recovered final experiment uses a stratified 70:30 train/test split (`random_state=42`), SMOTE on the training partition, StandardScaler fitted on the resampled training partition, and `LogisticRegression(max_iter=1000, class_weight='balanced')`.
+| Model | Validation accuracy | Validation F1 | Test accuracy | Test F1 |
+| --- | ---: | ---: | ---: | ---: |
+| XGBoost | 0.7692 | 0.77 | 0.7692 | 0.77 |
+| Logistic regression | 0.7282 | 0.72 | 0.7282 | 0.72 |
+| BERT | 0.9136 | 0.8904 | 0.7231 | 0.6566 |
+| RoBERTa | 0.9128 | 0.8712 | 0.6769 | 0.5465 |
 
-Detailed workflow: [Methodology](docs/methodology.md).
+The final summary reports the strongest test result for XGBoost and substantial validation-to-test decline for the Transformer models. Metric averaging is unspecified. Earlier baseline slides give different tabular accuracies; this table follows the final summary and matching report table. See [Results and source differences](docs/results.md).
 
-## Results
+### Model Interpretation
 
-| Logistic regression metric | Reported result |
-| --- | ---: |
-| Accuracy | 57.97% |
-| ROC-AUC | 0.605 |
-| Precision — non-survivors | 0.75 |
-| Recall — non-survivors | 0.37 |
+![Final logistic regression coefficients](docs/images/final/final-logistic-coefficients.jpg)
 
-### Model Coefficients
+*Final presentation, slide 17. Coefficients represent fitted associations.*
 
-![Logistic regression coefficient directions](docs/images/logistic-regression-coefficients.png)
+![Final XGBoost feature importance](docs/images/final/final-xgboost-importance.jpg)
 
-*Source: original final report, p. 11. Bars show fitted coefficients, not causal effects.*
+*Final presentation, slide 18. Feature importance does not establish clinical causation.*
 
-### Historical Evaluation
+## Limitations
 
-![Original logistic regression classification report and ROC-AUC](docs/images/logistic-regression-evaluation.png)
+- The observation window extends through the 120-hour outcome horizon. A clearly defined earlier cutoff is needed to establish admission-time forecasting.
+- Tabular and sequence experiments use different representations and admission sampling.
+- Patient-group separation in the sequence train/validation split is not established by the report.
+- Quantitative clinical values and elapsed-time embeddings were not fully incorporated into the sequence models; 512-token truncation limits long histories.
+- The final summary repeats tabular validation/test values and differs from earlier baseline slides. Original logs are needed to resolve these discrepancies.
+- No external validation or new metric reproduction is claimed.
 
-*Source: original final report, p. 11. Class 0 denotes survivors and class 1 non-survivors. These are original recorded results, not a new run.*
+## Code and Earlier Analysis
 
-High mean glucose, metabolic stress, and high norepinephrine dosage showed positive associations with mortality in the fitted model. More stable blood-pressure and oxygen-related measurements showed negative associations. Renal-function indicators also emerged as relevant exploratory signals.
+The recovered notebook analyzes **in-hospital mortality**; it does not implement the final 120-hour XGBoost/BERT comparison. The earlier 57.97% accuracy and 0.605 ROC-AUC belong to that exploratory stage.
 
-These are **associations within the analyzed dataset**. For example, greater norepinephrine exposure may reflect illness severity rather than a causal effect of the medication.
-
-The modest ROC-AUC and low non-survivor recall limit patient-level prediction. The model supports exploratory interpretation and does not demonstrate clinical readiness.
-
-Detailed findings: [Results & Limitations](docs/results.md).
-
-## Limitations & Future Work
-
-- Missing or incomplete records, an imbalanced outcome distribution, and limited clinical context constrain interpretation.
-- The recovered code calculates percentile thresholds from all non-survivors before the train/test split. This introduces outcome-informed information from the test partition; future evaluation should estimate thresholds using training patients only.
-- No independent external validation was performed.
-- Future work could improve missing-data handling, add diagnosis and disease-severity information, incorporate time-series trends, and compare nonlinear models.
-
-## Review
-
-This project connected clinical-table integration with exploratory analysis, feature engineering, and model interpretation. A key lesson was to evaluate predictive limitations alongside statistical associations, and to distinguish those associations from causal or clinical conclusions.
-
-## Documentation
-
-- [Methodology](docs/methodology.md)
-- [Results & Limitations](docs/results.md)
-
-## Code & Setup
-
-- [Original analysis notebook](notebooks/original_analysis.ipynb): recovered preprocessing, exploratory plots, and model experiments. Original Colab paths and historical cell order are preserved; stored outputs and cell metadata are removed.
-- [Final logistic-regression notebook](notebooks/mortality_modeling.ipynb): the recovered final experiment isolated for use with the prepared model-input table.
+- [Original exploratory notebook](notebooks/original_analysis.ipynb)
+- [Earlier logistic-regression experiment](notebooks/mortality_modeling.ipynb)
+- [Earlier analysis documentation](docs/earlier-analysis.md)
+- [Final methodology](docs/methodology.md)
+- [Final results and limitations](docs/results.md)
 
 ```bash
 pip install -r requirements.txt
 jupyter notebook
 ```
 
-Place the authorized prepared model-input CSV at `data/testing_h.csv`, then open `notebooks/mortality_modeling.ipynb` and run its cells with the notebook directory as the working directory. The owner confirmed the supplied model-input file corresponds to this analysis. The CSV requires the clinical columns referenced in the notebook and `hospital_expire_flag`; patient records are not distributed.
+For the earlier model notebook, place the authorized prepared CSV at `data/testing_h.csv` and run from the `notebooks` directory. The original archive retains Colab paths and historical cell order; stored outputs and metadata are removed. This setup runs the earlier experiment only. Patient-level records are excluded.
 
-The original notebook references raw clinical tables and `preprocessing_data(fixed).zip` under `/content/`. It is a historical analysis archive, not a single clean end-to-end pipeline. Adapt those paths and provide the intermediate files before running its exploratory sections.
+## Review
 
-The reported metrics above are from the original report. The recovered code has not been rerun to reproduce them.
+The project compared aggregate clinical features with event-text representations. Held-out performance, patient-level partitioning, and a clearly defined observation window were central lessons alongside model complexity.
