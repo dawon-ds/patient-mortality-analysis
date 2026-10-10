@@ -33,7 +33,7 @@ The project examined distributions and mortality-group differences across severa
 
 Threshold-based features used the **90th and 10th percentiles** of clinical-variable distributions among non-survivors (`hospital_expire_flag = 1`) to capture unusually high or low measurements.
 
-A derived **metabolic stress** feature combined oxygen-saturation information with extreme mean-glucose behavior to represent joint physiological stress.
+A derived **metabolic stress** feature is calculated as `mean_sao2 * mean_glucose` to represent joint physiological stress.
 
 ## Modeling
 
@@ -49,7 +49,7 @@ Linear regression was explored as an alternative continuous scoring approach, bu
 
 ## Evaluation Documentation
 
-The available public documentation does not specify the train/test split, random seed, or whether percentile thresholds were estimated on training data only. These details must be recovered from the original analysis before claiming reproducible or leakage-free evaluation. Future evaluations should fit preprocessing and thresholds on the training partition, then apply them to held-out patients.
+The recovered final experiment uses a stratified 70:30 split with `random_state=42`, SMOTE on the training partition, StandardScaler fitted to the resampled training partition, and logistic regression with `max_iter=1000` and `class_weight='balanced'`. Percentile thresholds are calculated using all non-survivors before splitting, so the test partition influences feature construction. The historical evaluation is therefore not leakage-free. Future evaluations should fit preprocessing and thresholds on the training partition, then apply them to held-out patients.
 
 ## Interpretation Principle
 
