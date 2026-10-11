@@ -19,11 +19,21 @@ This project integrates MIMIC clinical records at the patient and admission leve
 | Project report | December 1, 2024 |
 | Available code | Final tabular modeling, sequence preprocessing, BERT/RoBERTa training and evaluation; earlier exploratory analysis |
 
-## Data Integration
+## Data
+
+### Data Integration
 
 ![Clinical table structure](docs/images/final/data-tables.jpg)
 
 Admission, ICU, demographic, medication, procedure, and chart-event tables were joined using `subject_id` and `hadm_id`. Item dictionaries supplied categories and labels. Clinical events were sorted by their timestamps and consolidated into patient/admission records.
+
+### Data Security
+
+**Patient-level data is strictly excluded from this public repository.** Clinical CSVs contain sensitive health records, patient/admission identifiers, timestamps, treatments, and outcomes. Even de-identified records remain subject to source access and data-use restrictions; de-identification does not authorize redistribution.
+
+Raw and processed patient CSVs, patient-level JSON/event text, notebook outputs, dataset archives, and locally generated model artifacts are not published. Access to source data must be obtained independently through the authorized provider and used only in an approved private environment. Do not commit data, submit records in issues, or share screenshots containing patient information.
+
+The repository publishes source code and aggregate presentation figures only. All published notebooks have stored outputs, execution counts, attachments, and cell metadata removed. `.gitignore` provides an additional guard against accidental inclusion of clinical data and artifacts.
 
 ## Approach
 
@@ -41,7 +51,7 @@ Chronologically ordered event types and item labels were serialized into text. B
 
 The sequence experiments used 6,478 training admissions from 1,615 patients and 390 test admissions, using each test patient's last admission. Inputs were limited to 512 tokens. Elapsed time ordered events but was not implemented as a separate time embedding.
 
-## Final Results
+## Results
 
 | Model | Validation accuracy | Validation F1 | Test accuracy | Test F1 |
 | --- | ---: | ---: | ---: | ---: |
@@ -60,14 +70,9 @@ The sequence experiments used 6,478 training admissions from 1,615 patients and 
 
 ![Final XGBoost feature importance](docs/images/final/final-xgboost-importance.jpg)
 
-## Limitations
+## Repository Structure
 
-- **Define the prediction time:** The observation window extends through the 120-hour outcome horizon. An earlier cutoff is needed to evaluate early prediction.
-- **Evaluate by patient group:** Extend record-level sequence splitting to patient-group splitting and check for patient overlap between training and validation.
-- **Align comparison conditions:** Use consistent admission selection and partitioning across tabular and sequence experiments.
-- **Improve sequence representations:** Incorporate quantitative clinical values and elapsed-time information, and reduce information loss from the 512-token input limit.
-
-## Final Code
+### Code Guide
 
 | Notebook | Purpose |
 | --- | --- |
@@ -78,15 +83,9 @@ The sequence experiments used 6,478 training admissions from 1,615 patients and 
 
 [Setup and execution order](docs/execution.md) · [Data security policy](docs/data-security.md)
 
-## Data Security
+## Usage
 
-**Patient-level data is strictly excluded from this public repository.** Clinical CSVs contain sensitive health records, patient/admission identifiers, timestamps, treatments, and outcomes. Even de-identified records remain subject to source access and data-use restrictions; de-identification does not authorize redistribution.
-
-Raw and processed patient CSVs, patient-level JSON/event text, notebook outputs, dataset archives, and locally generated model artifacts are not published. Access to source data must be obtained independently through the authorized provider and used only in an approved private environment. Do not commit data, submit records in issues, or share screenshots containing patient information.
-
-The repository publishes source code and aggregate presentation figures only. All published notebooks have stored outputs, execution counts, attachments, and cell metadata removed. `.gitignore` provides an additional guard against accidental inclusion of clinical data and artifacts.
-
-## Code and Earlier Analysis
+### Earlier Analysis
 
 The earlier exploratory notebook analyzes **in-hospital mortality**; it does not implement the final 120-hour XGBoost/BERT comparison. The earlier 57.97% accuracy and 0.605 ROC-AUC belong to that exploratory stage.
 
@@ -102,6 +101,13 @@ jupyter notebook
 ```
 
 For the earlier model notebook, place the authorized prepared CSV at `data/testing_h.csv` and run from the `notebooks` directory. The original archive retains Colab paths and original cell order; stored outputs and metadata are removed. This setup runs the earlier experiment only. Final experiment instructions are in [Setup and execution order](docs/execution.md). Patient-level records are excluded.
+
+## Limitations
+
+- **Define the prediction time:** The observation window extends through the 120-hour outcome horizon. An earlier cutoff is needed to evaluate early prediction.
+- **Evaluate by patient group:** Extend record-level sequence splitting to patient-group splitting and check for patient overlap between training and validation.
+- **Align comparison conditions:** Use consistent admission selection and partitioning across tabular and sequence experiments.
+- **Improve sequence representations:** Incorporate quantitative clinical values and elapsed-time information, and reduce information loss from the 512-token input limit.
 
 ## Review
 
