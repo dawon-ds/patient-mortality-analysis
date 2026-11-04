@@ -127,24 +127,24 @@ XGBoost attained the highest reported test F1 (**0.77**). BERT and RoBERTa had s
 
 ![Logistic Regression coefficients](docs/images/final/final-logistic-coefficients.jpg)
 
-**Leading positive Logistic Regression coefficients in the detailed full report (p. 38):**
+**Leading positive Logistic Regression coefficients in the displayed chart:**
 
-1. **3-Significant Events_Cardiac Arrest_total_count:** Frequency of cardiac-arrest events.
-2. **Medications_Midazolam (Versed)_used_1.0:** Midazolam exposure recorded during treatment.
-3. **Labs_Uric Acid_total_count:** Frequency of uric-acid tests, potentially reflecting metabolic or renal monitoring.
+1. **Medications_Midazolam (Versed)_used_1.0:** Midazolam use may reflect sedation or intensive-care interventions.
+2. **patientweight:** Patient weight; the coefficient does not separately establish effects of high and low body weight.
+3. **3-Significant Events_Cardiac Arrest_total_count:** Frequency of recorded cardiac arrest events.
 
-The existing coefficient image is retained from the summary-version analysis and differs in ranking. Coefficients show model associations rather than causal effects.
+**Labs_Uric Acid_total_count** is also among the leading positive coefficients. These are associations in the fitted model, not causal evidence.
 
 ![XGBoost feature importance](docs/images/final/final-xgboost-importance.jpg)
 
-**Top four XGBoost features in the detailed full report (p. 39):**
+**Top four XGBoost features in the displayed chart:**
 
-1. **Respiratory_O2 Flow_used:** Oxygen supply status.
-2. **Neurological_Orientation_total_count:** Frequency of neurological orientation observations.
-3. **Pain/Sedation_Pain Present_total_count:** Frequency of recorded pain observations.
-4. **Respiratory_O2 saturation pulseoxymetry_total_count:** Frequency of pulse oximetry measurements.
+1. **Respiratory_O2 Flow_used:** Oxygen-supply status.
+2. **Treatments_Head of Bed_total_count:** Head-of-bed adjustment frequency.
+3. **Respiratory_O2 saturation pulseoxymetry_total_count:** Pulse oximetry measurement frequency.
+4. **Routine Vital Signs_Heart Rhythm_total_count:** Heart-rhythm observation frequency.
 
-The retained feature-importance image comes from the summary version and shows a different ranking. Feature importance describes model reliance, not causality or effect direction.
+Each has importance score **4.0** in the displayed chart. Feature importance does not indicate causation or the direction of an effect.
 
 [Detailed results and interpretation](docs/results.md)
 
