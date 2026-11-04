@@ -80,7 +80,7 @@ Elapsed time is measured from admission. Only events with `0 <= elapsed_time < 1
 
 ![Clinical event sequence classification](docs/images/final/event-sequence-model.jpg)
 
-The report lists **6,478 training admissions** and **390 test admissions** (last admission per test patient). Training admissions were split 80:20 into train/validation. Both models used learning rate `2e-5`, batch size `16`, `10` epochs, weight decay `0.01`, maximum sequence length `512`, and F1-based checkpoint selection.
+The full report states that records with `elapsed_time >= 120` had their `hospital_expire_flag` changed to 0 and events outside `[0, 120)` were removed. The sequence model thus used a modified mortality label. It lists **6,478 training admissions** and **390 test admissions** (last admission per test patient). Training admissions were split 80:20 into train/validation. Both models used learning rate `2e-5`, batch size `16`, `10` epochs, weight decay `0.01`, maximum sequence length `512`, and F1-based checkpoint selection.
 
 ## 04. Results
 
