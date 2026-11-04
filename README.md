@@ -1,10 +1,10 @@
 # Patient Mortality Prediction with MIMIC Data
 
-**Clinical data integration, tabular modeling, and event-sequence classification**
+**Predicting mortality within 120 hours of the last hospital admission using tabular clinical features and chronological event sequences.**
 
-This project integrates MIMIC clinical records at the patient and admission levels to predict **mortality within 120 hours of admission**. Aggregate clinical features and chronological event text were used to compare **XGBoost, logistic regression, BERT, and RoBERTa**, using **1,615 training patients and 390 test patients**. The study is a retrospective comparison; its observation window extends through the outcome horizon and does **not** establish early-warning performance.
+This project processes eight MIMIC clinical CSV tables and the `d_items` dictionary, compares **XGBoost**, **Logistic Regression**, **BERT**, and **RoBERTa**, and analyzes predictive clinical features. The final report documents **1,615 training patients and 390 test patients**.
 
-[Portfolio](https://incredible-march-0ef.notion.site/66068564df5a83329dc2012278107120)
+[Portfolio (Korean)](https://app.notion.com/p/3d568564df5a8106b931ef2eb591c508) · [Portfolio (English)](https://app.notion.com/p/66068564df5a83329dc2012278107120)
 
 ## Project Overview
 
@@ -12,110 +12,130 @@ This project integrates MIMIC clinical records at the patient and admission leve
 
 | Item | Description |
 | --- | --- |
-| Objective | Predict mortality within 120 hours of admission |
-| Data | MIMIC clinical records and item dictionaries |
-| Data partition | 1,615 training patients / 390 test patients |
-| Models | XGBoost, logistic regression, BERT, RoBERTa |
-| Project report | December 1, 2024 |
-| Available code | Final tabular modeling, sequence preprocessing, BERT/RoBERTa training and evaluation; earlier exploratory analysis |
+| Objective | Classify death within 120 hours after the last admission |
+| Source | MIMIC clinical tables and `d_items.csv` |
+| Training / test patients | 1,615 / 390 |
+| Tabular models | XGBoost, Logistic Regression |
+| Sequence models | `bert-base-uncased`, `roberta-base` |
+| Evaluation | Accuracy, Precision, Recall, F1-score |
 
-## Data
+## 01. Dataset and Exploratory Analysis
 
-### Data Integration
+Eight clinical CSVs—`admissions`, `icustays`, `chartevents`, `ingredientevents`, `inputevents`, `outputevents`, `procedureevents`, and `patients`—are joined using `subject_id` and `hadm_id`. `d_items.csv` maps item IDs to labels and categories.
 
 ![Clinical table structure](docs/images/final/data-tables.jpg)
 
-Admission, ICU, demographic, medication, procedure, and chart-event tables were joined using `subject_id` and `hadm_id`. Item dictionaries supplied categories and labels. Clinical events were sorted by their timestamps and consolidated into patient/admission records.
+The final report compares ICU length of stay: approximately **1.2 days** for patients who died within 120 hours versus **6.5 days** for those surviving beyond 120 hours. Differences in item usage between the groups also informed feature selection. These are descriptive associations, not causal conclusions.
 
-### Data Security
+## 02. Tabular Data Processing and Feature Engineering
 
-**Patient-level data is strictly excluded from this public repository.** Clinical CSVs contain sensitive health records, patient/admission identifiers, timestamps, treatments, and outcomes. Even de-identified records remain subject to source access and data-use restrictions; de-identification does not authorize redistribution.
+1. **Data integration:** Join tables using `subject_id` / `hadm_id`; sort admission events by time; consolidate records into JSON and convert them to training and test CSV files.
+2. **Feature construction:** Use `d_items` labels/categories to derive label usage, event frequency, mean event duration, and average ICU length of stay.
+3. **Feature filtering:** The report lists **5,240 columns** after feature engineering; remove **1,330 columns** with at least 80% missing values and **420 single-value columns**. The report describes the resulting feature set as approximately **3,900 features**.
+4. **Target:** `Dead_within_120_hours`. `hospital_expire_flag` and `survival_hours` were excluded from tabular predictors.
 
-Raw and processed patient CSVs, patient-level JSON/event text, notebook outputs, dataset archives, and locally generated model artifacts are not published. Access to source data must be obtained independently through the authorized provider and used only in an approved private environment. Do not commit data, submit records in issues, or share screenshots containing patient information.
-
-The repository publishes source code and aggregate presentation figures only. All published notebooks have stored outputs, execution counts, attachments, and cell metadata removed. `.gitignore` provides an additional guard against accidental inclusion of clinical data and artifacts.
-
-## Approach
-
-### Tabular Features and Models
-
-Tabular features included label-use indicators, event counts, average durations, ICU length of stay, and demographics. Highly missing and constant columns were removed from 5,240 initial columns, yielding approximately 3,900 final features. `hospital_expire_flag` and `survival_hours` were excluded as predictors of `Dead_within_120_hours`.
-
-XGBoost and logistic regression were tuned using grid search and five-fold cross-validation. The training partition was split 80:20 for training and validation. Additional tree, SVM, boosting, and KNN comparisons were presented.
-
-### Clinical Event Sequences
-
-![BERT event-sequence classification](docs/images/final/event-sequence-model.jpg)
-
-Chronologically ordered event types and item labels were serialized into text. BERT and RoBERTa were fine-tuned with learning rate `2e-5`, batch size `16`, `10` epochs, and weight decay `0.01`; checkpoints were selected using validation F1.
-
-The sequence experiments used 6,478 training admissions from 1,615 patients and 390 test admissions, using each test patient's last admission. Inputs were limited to 512 tokens. Elapsed time ordered events but was not implemented as a separate time embedding.
-
-## Results
-
-| Model | Validation accuracy | Validation F1 | Test accuracy | Test F1 |
-| --- | ---: | ---: | ---: | ---: |
-| XGBoost | 0.7692 | 0.77 | 0.7692 | 0.77 |
-| Logistic regression | 0.7282 | 0.72 | 0.7282 | 0.72 |
-| BERT | 0.9136 | 0.8904 | 0.7231 | 0.6566 |
-| RoBERTa | 0.9128 | 0.8712 | 0.6769 | 0.5465 |
-
-**XGBoost achieved the strongest test performance among the compared models, with 76.92% accuracy and an F1 score of 0.77.** BERT and RoBERTa showed lower test performance despite high validation scores, highlighting the importance of evaluating generalization to held-out patient data alongside model complexity.
-
-[Detailed experiment results](docs/results.md)
-
-### Model Interpretation
-
-![Final logistic regression coefficients](docs/images/final/final-logistic-coefficients.jpg)
-
-![Final XGBoost feature importance](docs/images/final/final-xgboost-importance.jpg)
-
-## Repository Structure
-
-### Code Guide
-
-| Notebook | Purpose |
+| Feature | Meaning |
 | --- | --- |
-| [Tabular modeling](notebooks/final/tabular_modeling.ipynb) | Clinical-table integration, 120-hour target construction, EDA, feature processing, XGBoost/logistic regression and comparison models |
-| [Sequence training-data preprocessing](notebooks/final/sequence_preprocessing_train.ipynb) | Event timelines, time-window filtering, item mapping, training text preparation |
-| [Sequence test-data preprocessing](notebooks/final/sequence_preprocessing_test.ipynb) | Last-admission selection and test text preparation |
-| [Sequence training and evaluation](notebooks/final/sequence_training_evaluation.ipynb) | BERT/RoBERTa fine-tuning and evaluation |
+| `gender`, `anchor_age`, `race` | Demographic information |
+| `patientweight` | Patient weight |
+| `icu_avg_los` | Average ICU length of stay |
+| `label_used` | Whether a clinical label was used |
+| `label_total_count` | Total number of occurrences of a label |
+| `label_avg_time` | Average event duration |
+| `Dead_within_120_hours` | Binary outcome (target) |
 
-[Setup and execution order](docs/execution.md) · [Data security policy](docs/data-security.md)
+### Tabular modeling
 
-## Usage
+XGBoost and Logistic Regression were compared using five-fold cross-validated grid search. The report describes a **64% training / 16% validation / 20% test** split.
 
-### Earlier Analysis
+| Model | Selected hyperparameters |
+| --- | --- |
+| XGBoost | `n_estimators=100`, `max_depth=3`, `learning_rate=0.2`, `subsample=0.8`, `colsample_bytree=0.8`, `gamma=5` |
+| Logistic Regression | `C=0.01`, `max_iter=100`, `penalty=l2`, `solver=lbfgs` |
 
-The earlier exploratory notebook analyzes **in-hospital mortality**; it does not implement the final 120-hour XGBoost/BERT comparison. The earlier 57.97% accuracy and 0.605 ROC-AUC belong to that exploratory stage.
+The report evaluates **324 XGBoost** and **30 Logistic Regression** parameter combinations.
 
-- [Original exploratory notebook](notebooks/original_analysis.ipynb)
-- [Earlier logistic-regression experiment](notebooks/mortality_modeling.ipynb)
-- [Earlier analysis documentation](docs/earlier-analysis.md)
-- [Final methodology](docs/methodology.md)
-- [Final results and limitations](docs/results.md)
+## 03. Clinical Event Sequence Processing
+
+For BERT and RoBERTa, the workflow separately joins clinical events by `hadm_id` and records timestamps as `event_time` alongside `event_type`. Available `itemid`, `value`, and `amount` fields are consolidated; absent fields are set to zero in intermediate representations. Events are ordered by their start times.
+
+Elapsed time is measured from admission. Only events with `0 <= elapsed_time < 120` are retained. For admissions containing 200 or more events, the report describes filtering for informative item IDs with differing usage between outcome groups.
+
+| Sequence field | Description | Model role |
+| --- | --- | --- |
+| `hospital_expire_flag` | Outcome label used in the sequence workflow | Target |
+| `hadm_id` | Unique hospital admission ID | Record grouping |
+| `elapsed_time` | Hours since admission | Chronological ordering only |
+| `event_type` | Event type (e.g., `admittime`, `charttime`) | Text input |
+| `itemid` | Item name mapped via `d_items` | Text input |
+| `value` | Measurement / amount, default 0 when absent | Intermediate data, not final text input |
+
+**Final sequence input:** a single sentence formed from `event_type` and the mapped item label, e.g. `admittime_Item_name dischtime_Item_name`.
+
+![Clinical event sequence classification](docs/images/final/event-sequence-model.jpg)
+
+The report lists **6,478 training admissions** and **390 test admissions** (last admission per test patient). Training admissions were split 80:20 into train/validation. Both models used learning rate `2e-5`, batch size `16`, `10` epochs, weight decay `0.01`, maximum sequence length `512`, and F1-based checkpoint selection.
+
+## 04. Results
+
+![Model performance comparison](docs/images/final/final-model-comparison.jpg)
+
+### Validation
+
+| Model | Accuracy | Precision | Recall | F1 |
+| --- | ---: | ---: | ---: | ---: |
+| XGBoost | 0.7692 | 0.78 | 0.77 | 0.77 |
+| Logistic Regression | 0.7282 | 0.74 | 0.73 | 0.72 |
+| BERT | 0.9136 | 0.8878 | 0.9136 | 0.8904 |
+| RoBERTa | 0.9128 | 0.8332 | 0.9128 | 0.8712 |
+
+### Test
+
+| Model | Accuracy | Precision | Recall | F1 |
+| --- | ---: | ---: | ---: | ---: |
+| **XGBoost** | **0.7692** | **0.78** | **0.77** | **0.77** |
+| Logistic Regression | 0.7282 | 0.74 | 0.73 | 0.72 |
+| BERT | 0.7231 | 0.6566 | 0.7231 | 0.6566 |
+| RoBERTa | 0.6769 | 0.4582 | 0.6769 | 0.5465 |
+
+XGBoost attained the highest reported test F1 (**0.77**). BERT and RoBERTa had substantially higher validation than test performance. Data sampling and split conventions were not identical across tabular and sequence branches, so this comparison does not isolate model architecture as the sole cause of the difference.
+
+### Model interpretation
+
+![Logistic Regression coefficients](docs/images/final/final-logistic-coefficients.jpg)
+
+Top positive Logistic Regression coefficients mentioned in the report include **Midazolam (Versed) use**, **patient weight**, and **cardiac arrest event count**.
+
+![XGBoost feature importance](docs/images/final/final-xgboost-importance.jpg)
+
+The report highlights **oxygen flow use**, **head-of-bed adjustment count**, **pulse oximetry measurement count**, and **heart-rhythm observation count**. Coefficients and importances describe predictive associations rather than medical causality.
+
+[Detailed results and interpretation](docs/results.md)
+
+## 05. Limitations and Future Work
+
+- Quantitative information such as medication dose and fluid amounts was not fully incorporated into model inputs.
+- Tabular modeling focused on the last admission; earlier admissions and infrequent events may provide additional information.
+- Sequence modeling did not incorporate `elapsed_time` as a learned temporal embedding or `value` in its final text representation.
+- The 512-token input limit restricted long clinical-event sequences; alternative long-context or clinical-pretrained models could be investigated.
+- Patient-level validation splits, consistent admission selection across models, and an observation cutoff preceding the outcome horizon would strengthen claims about generalization and early prediction.
+
+## 06. Code and Documentation
+
+| File | Description |
+| --- | --- |
+| [Tabular modeling](notebooks/final/tabular_modeling.ipynb) | Integration, feature engineering and tabular classification |
+| [Sequence preprocessing (train)](notebooks/final/sequence_preprocessing_train.ipynb) | Training-event preparation |
+| [Sequence preprocessing (test)](notebooks/final/sequence_preprocessing_test.ipynb) | Test-event preparation |
+| [Sequence model training/evaluation](notebooks/final/sequence_training_evaluation.ipynb) | BERT/RoBERTa experiments |
+| [Methodology](docs/methodology.md) | Full processing and model setup |
+| [Results](docs/results.md) | Results and interpretive notes |
+| [Execution](docs/execution.md) | Run order and dependencies |
+| [Earlier analysis](docs/earlier-analysis.md) | Separate earlier in-hospital mortality experiments |
 
 ```bash
 pip install -r requirements.txt
 jupyter notebook
 ```
 
-For the earlier model notebook, place the authorized prepared CSV at `data/testing_h.csv` and run from the `notebooks` directory. The original archive retains Colab paths and original cell order; stored outputs and metadata are removed. This setup runs the earlier experiment only. Final experiment instructions are in [Setup and execution order](docs/execution.md). Patient-level records are excluded.
-
-## Limitations
-
-- **Define the prediction time:** The observation window extends through the 120-hour outcome horizon. An earlier cutoff is needed to evaluate early prediction.
-- **Evaluate by patient group:** Extend record-level sequence splitting to patient-group splitting and check for patient overlap between training and validation.
-- **Align comparison conditions:** Use consistent admission selection and partitioning across tabular and sequence experiments.
-- **Improve sequence representations:** Incorporate quantitative clinical values and elapsed-time information, and reduce information loss from the 512-token input limit.
-
-## Review
-
-The project compared aggregate clinical features with event-text representations. Held-out performance, patient-level partitioning, and a clearly defined observation window were central lessons alongside model complexity.
-
-## Data and Third-party Resources
-
-- **Clinical data:** [MIMIC documentation](https://mimic.mit.edu/) and [access instructions](https://mimic.mit.edu/docs/faq/how-to-get-access.html). MIMIC requires credentialed access and a data use agreement; patient-level files must not be uploaded to this repository. See [data-security policy](docs/data-security.md).
-- **Environment:** final tabular notebook accepts a private data directory through `PATIENT_DATA_ROOT`; original analysis notebook preserves historical Colab paths.
-
-Dependency lists are in `requirements.txt`; unless versions are explicitly pinned there, they do not reproduce an exact historical software environment. No redistribution permission for third-party inputs is implied by this repository.
+The earlier in-hospital mortality analysis and its metrics are distinct from this 120-hour modeling comparison.
