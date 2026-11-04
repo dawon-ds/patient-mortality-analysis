@@ -51,6 +51,6 @@ Coefficients and feature importances describe associations in the fitted models,
 
 ## Source Notes
 
-The full 50-page report details tuned-grid-search XGBoost validation accuracy **0.8296** and test accuracy **0.7743**, plus Logistic Regression validation accuracy **0.8359** and test accuracy **0.7589** (pp. 34–37). The final combined result table in that same report (pp. 47–48), repeated in the 14-page summary (p. 10), instead lists XGBoost **0.7692** and Logistic Regression **0.7282** for both validation and test. The tables above reproduce the combined summary as printed, not independently verified split-specific results. The discrepancy is internal to the source reports; there is insufficient evidence to replace all reported results with a single reconciled set.
+The detailed experiment results come from the full report (pp. 34–37), while the combined summary comes from its pp. 47–48 and the short report (p. 10). The combined summary repeats identical tabular metrics in its validation and test columns. These reported results have not been independently reconciled or confirmed as separate split-specific measurements.
 
 Earlier in-hospital mortality metrics are documented separately in [Earlier Analysis](earlier-analysis.md).
