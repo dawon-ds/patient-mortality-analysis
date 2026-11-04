@@ -1,6 +1,15 @@
-# Final Results and Interpretation
+# Results and Interpretation — Full Report First
 
-## Validation
+## Tuned Tabular Models: Detailed Full-Report Experiments
+
+| Model | Validation accuracy | Test accuracy |
+| --- | ---: | ---: |
+| XGBoost (grid-search tuned) | 0.8296 | 0.7743 |
+| Logistic Regression (grid-search tuned) | 0.8359 | 0.7589 |
+
+The detailed experiments appear on pp. 34–37 of the 50-page report. Its later final combined table reports different tabular numbers; these results are presented separately, not merged or silently overwritten. The classwise metrics in the detailed report should not be confused with the final table's aggregate precision/recall/F1.
+
+## Combined Summary Table: Validation
 
 | Model | Accuracy | Precision | Recall | F1 |
 | --- | ---: | ---: | ---: | ---: |
@@ -9,7 +18,7 @@
 | BERT | 0.9136 | 0.8878 | 0.9136 | 0.8904 |
 | RoBERTa | 0.9128 | 0.8332 | 0.9128 | 0.8712 |
 
-## Test
+## Combined Summary Table: Test
 
 | Model | Accuracy | Precision | Recall | F1 |
 | --- | ---: | ---: | ---: | ---: |
@@ -18,17 +27,19 @@
 | BERT | 0.7231 | 0.6566 | 0.7231 | 0.6566 |
 | RoBERTa | 0.6769 | 0.4582 | 0.6769 | 0.5465 |
 
-**XGBoost was the strongest test performer (F1 0.77).** The sequence models exhibited pronounced validation-to-test declines.
+**The combined report table lists XGBoost with test F1 0.77.** The sequence models exhibited pronounced validation-to-test declines.
 
-## Model Interpretation
+## Model Interpretation — Detailed Report Rankings
 
-![Logistic Regression coefficients](images/final/final-logistic-coefficients.jpg)
+![Logistic Regression coefficients from summary report](images/final/final-logistic-coefficients.jpg)
 
-The report identifies positive coefficients for Midazolam use, patient weight, and cardiac-arrest event counts.
+In the detailed full-report experiment (p. 38), the reported leading positive coefficients are **3-Significant Events_Cardiac Arrest_total_count**, **Medications_Midazolam (Versed)_used_1.0**, and **Labs_Uric Acid_total_count**. The retained image comes from the summary-version experiment and may show a different ranking.
 
-![XGBoost feature importance](images/final/final-xgboost-importance.jpg)
+![XGBoost feature importance from summary report](images/final/final-xgboost-importance.jpg)
 
-Highlighted XGBoost features include oxygen-flow use, head-of-bed adjustments, pulse oximetry frequency, and heart-rhythm measurement frequency. These are model associations, not proof of clinical causation.
+In the detailed full-report experiment (p. 39), the reported top four features are **Respiratory_O2 Flow_used**, **Neurological_Orientation_total_count**, **Pain/Sedation_Pain Present_total_count**, and **Respiratory_O2 saturation pulseoxymetry_total_count**. The retained figure corresponds to the separate summary ranking.
+
+Coefficients and feature importances are predictive associations, not evidence of clinical causation.
 
 ## Limitations and Future Work
 
