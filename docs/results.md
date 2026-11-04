@@ -29,17 +29,17 @@ The detailed experiments appear on pp. 34–37 of the 50-page report. Its later 
 
 **The combined report table lists XGBoost with test F1 0.77.** The sequence models exhibited pronounced validation-to-test declines.
 
-## Model Interpretation — Detailed Report Rankings
+## Model Interpretation
 
-![Logistic Regression coefficients from summary report](images/final/final-logistic-coefficients.jpg)
+![Logistic Regression coefficients](images/final/final-logistic-coefficients.jpg)
 
-In the detailed full-report experiment (p. 38), the reported leading positive coefficients are **3-Significant Events_Cardiac Arrest_total_count**, **Medications_Midazolam (Versed)_used_1.0**, and **Labs_Uric Acid_total_count**. The retained image comes from the summary-version experiment and may show a different ranking.
+The displayed positive-coefficient ranking begins with **Medications_Midazolam (Versed)_used_1.0**, **patientweight**, and **3-Significant Events_Cardiac Arrest_total_count**, followed by **Labs_Uric Acid_total_count**.
 
-![XGBoost feature importance from summary report](images/final/final-xgboost-importance.jpg)
+![XGBoost feature importance](images/final/final-xgboost-importance.jpg)
 
-In the detailed full-report experiment (p. 39), the reported top four features are **Respiratory_O2 Flow_used**, **Neurological_Orientation_total_count**, **Pain/Sedation_Pain Present_total_count**, and **Respiratory_O2 saturation pulseoxymetry_total_count**. The retained figure corresponds to the separate summary ranking.
+The top four features displayed, each with an importance score of **4.0**, are **Respiratory_O2 Flow_used**, **Treatments_Head of Bed_total_count**, **Respiratory_O2 saturation pulseoxymetry_total_count**, and **Routine Vital Signs_Heart Rhythm_total_count**.
 
-Coefficients and feature importances are predictive associations, not evidence of clinical causation.
+Coefficients and feature importances describe associations in the fitted models, not clinical causation.
 
 ## Limitations and Future Work
 
