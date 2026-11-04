@@ -10,7 +10,7 @@ The project predicts death within **120 hours after the patient's last hospital 
 2. Sort all events within an admission in chronological order; merge records into JSON and export structured train/test CSV files.
 3. Map `itemid` to category and label through `d_items.csv`.
 4. Engineer `label_used`, `label_total_count`, `label_avg_time`, and `icu_avg_los`, alongside demographics and weight.
-5. The report lists 5,240 columns after feature construction. It removes 1,330 columns with >=80% missingness and 420 constant columns, reporting about 3,900 final features.
+5. The report lists 5,240 columns after feature construction, removal of 1,330 columns with at least 80% missingness, and removal of 420 constant columns. It separately describes approximately 3,900 final features. The reported totals do not reconcile by simple subtraction, so the exact final feature count needs confirmation.
 6. `Dead_within_120_hours` is the tabular target. `hospital_expire_flag` and `survival_hours` are excluded from predictors.
 
 ### Tabular Models
