@@ -84,6 +84,17 @@ The full report states that records with `elapsed_time >= 120` had their `hospit
 
 ## 04. Results
 
+### Detailed Tuned Tabular Experiments (Full Report, pp. 34–37)
+
+| Model | Validation accuracy | Test accuracy |
+| --- | ---: | ---: |
+| XGBoost | 0.8296 | 0.7743 |
+| Logistic Regression | 0.8359 | 0.7589 |
+
+The detailed full-report experiments are the primary reference here. The later combined summary contains different tabular metrics; both sets are distinguished rather than merged.
+
+### Combined Model Summary (Full Report, pp. 47–48)
+
 ![Model performance comparison](docs/images/final/final-model-comparison.jpg)
 
 ### Validation
