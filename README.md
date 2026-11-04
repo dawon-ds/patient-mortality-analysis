@@ -112,3 +112,10 @@ For the earlier model notebook, place the authorized prepared CSV at `data/testi
 ## Review
 
 The project compared aggregate clinical features with event-text representations. Held-out performance, patient-level partitioning, and a clearly defined observation window were central lessons alongside model complexity.
+
+## Data and Third-party Resources
+
+- **Clinical data:** [MIMIC documentation](https://mimic.mit.edu/) and [access instructions](https://mimic.mit.edu/docs/faq/how-to-get-access.html). MIMIC requires credentialed access and a data use agreement; patient-level files must not be uploaded to this repository. See [data-security policy](docs/data-security.md).
+- **Environment:** final tabular notebook accepts a private data directory through `PATIENT_DATA_ROOT`; original analysis notebook preserves historical Colab paths.
+
+Dependency lists are in `requirements.txt`; unless versions are explicitly pinned there, they do not reproduce an exact historical software environment. No redistribution permission for third-party inputs is implied by this repository.
