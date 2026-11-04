@@ -31,7 +31,7 @@ The final report compares ICU length of stay: approximately **1.2 days** for pat
 
 1. **Data integration:** Join tables using `subject_id` / `hadm_id`; sort admission events by time; consolidate records into JSON and convert them to training and test CSV files.
 2. **Feature construction:** Use `d_items` labels/categories to derive label usage, event frequency, mean event duration, and average ICU length of stay.
-3. **Feature filtering:** The report lists **5,240 columns** after feature engineering; remove **1,330 columns** with at least 80% missing values and **420 single-value columns**. The report describes the resulting feature set as approximately **3,900 features**.
+3. **Feature filtering:** The report lists **5,240 constructed columns**, **1,330 removed for high missingness**, and **420 removed as constant columns**. It separately reports approximately **3,900 final features**; these counts do not reconcile by simple subtraction and need verification.
 4. **Target:** `Dead_within_120_hours`. `hospital_expire_flag` and `survival_hours` were excluded from tabular predictors.
 
 | Feature | Meaning |
@@ -69,7 +69,7 @@ Elapsed time is measured from admission. Only events with `0 <= elapsed_time < 1
 
 | Sequence field | Description | Model role |
 | --- | --- | --- |
-| `hospital_expire_flag` | Outcome label used in the sequence workflow | Target |
+| `hospital_expire_flag` | Sequence outcome label; confirm whether it was redefined for the 120-hour task | Target |
 | `hadm_id` | Unique hospital admission ID | Record grouping |
 | `elapsed_time` | Hours since admission | Chronological ordering only |
 | `event_type` | Event type (e.g., `admittime`, `charttime`) | Text input |
@@ -108,9 +108,9 @@ XGBoost attained the highest reported test F1 (**0.77**). BERT and RoBERTa had s
 
 ### Key Findings
 
-- **Best test performance:** XGBoost achieved the highest reported Test F1 (**0.77**) across the four models.
-- **Validation–test gap:** BERT and RoBERTa reached Validation F1 scores of **0.8904** and **0.8712**, respectively, but Test F1 dropped to **0.6566** and **0.5465**. This highlights the importance of held-out evaluation.
-- **Input representation and evaluation conditions:** The final event-text input did not incorporate quantitative measurements or learned elapsed-time embeddings. Differences in admission selection and splitting also limit direct architectural comparisons.
+- **Model complexity did not guarantee stronger test performance:** The tabular approach recorded the highest reported F1 in this experiment.
+- **Validation is not the same as generalization:** Strong Transformer validation scores did not persist on the separate test set.
+- **Input representation and evaluation matter:** Numerical and temporal information was underrepresented, and admission selection and splitting differed across model families.
 
 ### Model interpretation
 
@@ -141,33 +141,13 @@ These variables describe treatment and monitoring patterns. Feature importance i
 
 ### Machine Learning Models
 
-**1. Limited use of quantitative item information**
-
-The project represented category- and label-level clinical features, but did not fully incorporate quantitative values linked to `itemid`, such as medication doses and fluid balance. **Future work:** normalize measurement units, derive cumulative dosage and response-pattern features, and test whether these improve prediction.
-
-**2. Focus on the last admission (`last_hadm_id`)**
-
-Restricting tabular analysis to each patient's final admission simplified the dataset and focused on events closest to the outcome, but left earlier admission history unexamined. **Future work:** include all admissions and explore temporal patterns related to chronic conditions and recurrent events with RNNs or Transformers.
-
-**3. Generalization to less frequent events**
-
-Prioritizing commonly observed categories and labels may have missed rare but informative events in smaller patient subgroups. **Future work:** consider less common event types and evaluate generalization across diverse populations.
+Categorical and label-based features were constructed, but quantitative data such as medication dosage and fluid balance were not fully incorporated. Focusing on the last admission and frequent events may also have missed earlier patient history and rare clinical patterns. Future work could add normalized quantitative features and longitudinal admission records to evaluate improvements in generalization.
 
 ### Deep Learning Models
 
-**1. Limited use of `elapsed_time` and `value`**
+Technical and input-construction constraints meant that `elapsed_time` was used only for event ordering and `value` was not included in the final text. The 512-token limit and computational constraints prevented longer-context model experiments, while hyperparameter searches were limited. Future work could combine numerical and temporal representations and compare domain-pretrained or long-context models.
 
-The intended positional representation of `elapsed_time` was not implemented due to technical difficulties; time was used only to order events. Quantitative `value` fields were omitted from the final model input because of input-construction complexity. **Future work:** incorporate elapsed-time embeddings and numeric clinical values into the sequence representation.
-
-**2. Model selection and sequence length**
-
-BERT/RoBERTa had a 512-token maximum input length. Longer-context models such as Longformer were considered but not tested due to memory and training-time limits. Medical-domain pretrained encoders were another unexplored alternative. **Future work:** compare long-sequence and clinically pretrained models when resources allow.
-
-**3. Limited experimentation**
-
-The available training environment constrained batch-size changes, and learning rate, weight decay, and other parameters were not extensively tuned. **Future work:** expand hyperparameter experiments and test richer sequence inputs.
-
-**Additional evaluation boundaries:** Patient-level train/validation separation, consistent sample selection across model families, and an earlier observation cutoff would be needed to assess generalization and early-warning performance. Using events observed during the same 120-hour outcome horizon should not be described as validated early prediction.
+**Evaluation note:** The observation window overlaps the 120-hour outcome horizon, so earlier observation cutoffs and patient-level evaluation are needed to establish early-warning performance. The tabular validation/test values also need confirmation against the original experiment outputs.
 
 ## 06. Code and Documentation
 
