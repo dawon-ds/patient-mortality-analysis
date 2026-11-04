@@ -40,6 +40,6 @@ Highlighted XGBoost features include oxygen-flow use, head-of-bed adjustments, p
 
 ## Source Notes
 
-The earlier comparison reports XGBoost validation accuracy 0.8296 / test accuracy 0.7743 and Logistic Regression validation accuracy 0.8359 / test accuracy 0.7589. These differ from the final summary, which repeats the tabular validation and test entries. This page follows the final report summary while preserving that distinction. The coefficient figure and explanatory paragraphs do not establish a single unambiguous feature ranking.
+The earlier comparison reports XGBoost validation accuracy 0.8296 / test accuracy 0.7743 and Logistic Regression validation accuracy 0.8359 / test accuracy 0.7589. These differ from the final summary, which repeats the tabular validation and test entries. The tables above retain the final report summary without treating those duplicated tabular metrics as independently verified validation and test results. The coefficient figure and explanatory paragraphs do not establish a single unambiguous feature ranking.
 
 Earlier in-hospital mortality metrics are documented separately in [Earlier Analysis](earlier-analysis.md).
