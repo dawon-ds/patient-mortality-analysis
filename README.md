@@ -4,7 +4,6 @@
 
 This project processes eight MIMIC clinical CSV tables and the `d_items` dictionary, compares **XGBoost**, **Logistic Regression**, **BERT**, and **RoBERTa**, and analyzes predictive clinical features. The final report documents **1,615 training patients and 390 test patients**.
 
-[Portfolio (Korean)](https://app.notion.com/p/3d568564df5a8106b931ef2eb591c508) · [Portfolio (English)](https://app.notion.com/p/66068564df5a83329dc2012278107120)
 
 ## Project Overview
 
