@@ -147,7 +147,7 @@ Categorical and label-based features were constructed, but quantitative data suc
 
 Technical and input-construction constraints meant that `elapsed_time` was used only for event ordering and `value` was not included in the final text. The 512-token limit and computational constraints prevented longer-context model experiments, while hyperparameter searches were limited. Future work could combine numerical and temporal representations and compare domain-pretrained or long-context models.
 
-**Evaluation note:** The observation window overlaps the 120-hour outcome horizon, so earlier observation cutoffs and patient-level evaluation are needed to establish early-warning performance. The tabular validation/test values also need confirmation against the original experiment outputs.
+**Evaluation note:** The observation window overlaps the 120-hour outcome horizon, so earlier observation cutoffs and patient-level evaluation are needed to establish early-warning performance. The full report separately describes tuned validation/test accuracy of **0.8296 / 0.7743** for XGBoost and **0.8359 / 0.7589** for Logistic Regression. These differ from the repeated tabular values in the final combined summary, so the two source presentations are not treated as identical experiments.
 
 ## 06. Code and Documentation
 
