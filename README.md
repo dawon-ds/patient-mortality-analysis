@@ -139,11 +139,35 @@ These variables describe treatment and monitoring patterns. Feature importance i
 
 ## 05. Limitations and Future Work
 
-- Quantitative information such as medication dose and fluid amounts was not fully incorporated into model inputs.
-- Tabular modeling focused on the last admission; earlier admissions and infrequent events may provide additional information.
-- Sequence modeling did not incorporate `elapsed_time` as a learned temporal embedding or `value` in its final text representation.
-- The 512-token input limit restricted long clinical-event sequences; alternative long-context or clinical-pretrained models could be investigated.
-- Patient-level validation splits, consistent admission selection across models, and an observation cutoff preceding the outcome horizon would strengthen claims about generalization and early prediction.
+### Machine Learning Models
+
+**1. Limited use of quantitative item information**
+
+The project represented category- and label-level clinical features, but did not fully incorporate quantitative values linked to `itemid`, such as medication doses and fluid balance. **Future work:** normalize measurement units, derive cumulative dosage and response-pattern features, and test whether these improve prediction.
+
+**2. Focus on the last admission (`last_hadm_id`)**
+
+Restricting tabular analysis to each patient's final admission simplified the dataset and focused on events closest to the outcome, but left earlier admission history unexamined. **Future work:** include all admissions and explore temporal patterns related to chronic conditions and recurrent events with RNNs or Transformers.
+
+**3. Generalization to less frequent events**
+
+Prioritizing commonly observed categories and labels may have missed rare but informative events in smaller patient subgroups. **Future work:** consider less common event types and evaluate generalization across diverse populations.
+
+### Deep Learning Models
+
+**1. Limited use of `elapsed_time` and `value`**
+
+The intended positional representation of `elapsed_time` was not implemented due to technical difficulties; time was used only to order events. Quantitative `value` fields were omitted from the final model input because of input-construction complexity. **Future work:** incorporate elapsed-time embeddings and numeric clinical values into the sequence representation.
+
+**2. Model selection and sequence length**
+
+BERT/RoBERTa had a 512-token maximum input length. Longer-context models such as Longformer were considered but not tested due to memory and training-time limits. Medical-domain pretrained encoders were another unexplored alternative. **Future work:** compare long-sequence and clinically pretrained models when resources allow.
+
+**3. Limited experimentation**
+
+The available training environment constrained batch-size changes, and learning rate, weight decay, and other parameters were not extensively tuned. **Future work:** expand hyperparameter experiments and test richer sequence inputs.
+
+**Additional evaluation boundaries:** Patient-level train/validation separation, consistent sample selection across model families, and an earlier observation cutoff would be needed to assess generalization and early-warning performance. Using events observed during the same 120-hour outcome horizon should not be described as validated early prediction.
 
 ## 06. Code and Documentation
 
