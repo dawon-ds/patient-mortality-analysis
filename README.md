@@ -2,7 +2,7 @@
 
 **Clinical data integration, tabular modeling, and event-sequence classification**
 
-This project integrates MIMIC clinical records at the patient and admission levels to predict **mortality within 120 hours of admission**. Aggregate clinical features and chronological event text were used to compare **XGBoost, logistic regression, BERT, and RoBERTa**, using **1,615 training patients and 390 test patients**.
+This project integrates MIMIC clinical records at the patient and admission levels to predict **mortality within 120 hours of admission**. Aggregate clinical features and chronological event text were used to compare **XGBoost, logistic regression, BERT, and RoBERTa**, using **1,615 training patients and 390 test patients**. The study is a retrospective comparison; its observation window extends through the outcome horizon and does **not** establish early-warning performance.
 
 [Portfolio](https://incredible-march-0ef.notion.site/66068564df5a83329dc2012278107120)
 
