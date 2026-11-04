@@ -90,37 +90,15 @@ The full report states that records with `elapsed_time >= 120` had their `hospit
 | XGBoost | 0.8296 | 0.7743 |
 | Logistic Regression | 0.8359 | 0.7589 |
 
-The detailed full-report experiments are the primary reference here. The later combined summary contains different tabular metrics; both sets are distinguished rather than merged.
+The final combined summary reports different tabular metrics; see [Results](docs/results.md) for source details.
 
 ### Combined Model Summary (Full Report, pp. 47–48)
 
 ![Model performance comparison](docs/images/final/final-model-comparison.jpg)
 
-### Validation
+The combined report table lists **XGBoost test F1 = 0.77**, **Logistic Regression = 0.72**, **BERT = 0.6566**, and **RoBERTa = 0.5465**. BERT and RoBERTa scored higher on validation than on test data. Different admission-selection and splitting conventions limit direct comparisons across model families.
 
-| Model | Accuracy | Precision | Recall | F1 |
-| --- | ---: | ---: | ---: | ---: |
-| XGBoost | 0.7692 | 0.78 | 0.77 | 0.77 |
-| Logistic Regression | 0.7282 | 0.74 | 0.73 | 0.72 |
-| BERT | 0.9136 | 0.8878 | 0.9136 | 0.8904 |
-| RoBERTa | 0.9128 | 0.8332 | 0.9128 | 0.8712 |
-
-### Test
-
-| Model | Accuracy | Precision | Recall | F1 |
-| --- | ---: | ---: | ---: | ---: |
-| **XGBoost** | **0.7692** | **0.78** | **0.77** | **0.77** |
-| Logistic Regression | 0.7282 | 0.74 | 0.73 | 0.72 |
-| BERT | 0.7231 | 0.6566 | 0.7231 | 0.6566 |
-| RoBERTa | 0.6769 | 0.4582 | 0.6769 | 0.5465 |
-
-XGBoost attained the highest reported test F1 (**0.77**). BERT and RoBERTa had substantially higher validation than test performance. Data sampling and split conventions were not identical across tabular and sequence branches, so this comparison does not isolate model architecture as the sole cause of the difference.
-
-### Key Findings
-
-- **Model complexity did not guarantee stronger test performance:** The tabular approach recorded the highest reported F1 in this experiment.
-- **Validation is not the same as generalization:** Strong Transformer validation scores did not persist on the separate test set.
-- **Input representation and evaluation matter:** Numerical and temporal information was underrepresented, and admission selection and splitting differed across model families.
+For complete validation/test metrics and the discrepancy between detailed experiments and the combined summary, see [Detailed results](docs/results.md).
 
 ### Model interpretation
 
@@ -145,8 +123,6 @@ XGBoost attained the highest reported test F1 (**0.77**). BERT and RoBERTa had s
 
 Each has importance score **4.0** in the displayed chart. Feature importance does not indicate causation or the direction of an effect.
 
-[Detailed results and interpretation](docs/results.md)
-
 ## 05. Limitations and Future Work
 
 ### Machine Learning Models
@@ -157,7 +133,7 @@ Categorical and label-based features were constructed, but quantitative data suc
 
 Technical and input-construction constraints meant that `elapsed_time` was used only for event ordering and `value` was not included in the final text. The 512-token limit and computational constraints prevented longer-context model experiments, while hyperparameter searches were limited. Future work could combine numerical and temporal representations and compare domain-pretrained or long-context models.
 
-**Evaluation note:** The observation window overlaps the 120-hour outcome horizon, so earlier observation cutoffs and patient-level evaluation are needed to establish early-warning performance. The full report separately describes tuned validation/test accuracy of **0.8296 / 0.7743** for XGBoost and **0.8359 / 0.7589** for Logistic Regression. These differ from the repeated tabular values in the final combined summary, so the two source presentations are not treated as identical experiments.
+**Evaluation note:** The observation window overlaps the 120-hour outcome horizon. Earlier cutoffs and patient-level evaluation are needed to establish early-warning performance.
 
 ## 06. Code and Documentation
 
