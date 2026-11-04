@@ -56,10 +56,10 @@ XGBoost and Logistic Regression were compared using five-fold cross-validated gr
 
 | Model | Selected hyperparameters |
 | --- | --- |
-| XGBoost | `n_estimators=100`, `max_depth=3`, `learning_rate=0.2`, `subsample=0.8`, `colsample_bytree=0.8`, `gamma=5` |
+| XGBoost | `n_estimators=150`, `max_depth=3`, `learning_rate=0.2`, `subsample=0.8`, `colsample_bytree=1.0`, `gamma=5` |
 | Logistic Regression | `C=0.01`, `max_iter=100`, `penalty=l2`, `solver=lbfgs` |
 
-The report evaluates **324 XGBoost** and **30 Logistic Regression** parameter combinations.
+The report evaluates **324 XGBoost** and **30 Logistic Regression** parameter combinations. The XGBoost parameters above follow the detailed tuned experiment (full report pp. 34–35); the later setup summary instead lists `n_estimators=100` and `colsample_bytree=0.8`.
 
 ## 03. Clinical Event Sequence Processing
 
@@ -80,7 +80,7 @@ Elapsed time is measured from admission. Only events with `0 <= elapsed_time < 1
 
 ![Clinical event sequence classification](docs/images/final/event-sequence-model.jpg)
 
-The full report states that records with `elapsed_time >= 120` had their `hospital_expire_flag` changed to 0 and events outside `[0, 120)` were removed. The sequence model thus used a modified mortality label. It lists **6,478 training admissions** and **390 test admissions** (last admission per test patient). Training admissions were split 80:20 into train/validation. Both models used learning rate `2e-5`, batch size `16`, `10` epochs, weight decay `0.01`, maximum sequence length `512`, and F1-based checkpoint selection.
+The full report states that records with `elapsed_time >= 120` had their `hospital_expire_flag` changed to 0 and events outside `[0, 120)` were removed. The sequence model thus used a modified mortality label. It lists **6,478 training admissions from 1,615 patients** (all training-patient admissions) and **390 test admissions from 390 patients** (only each test patient's final admission). Training admissions were split 80:20 into train/validation. Both models used learning rate `2e-5`, batch size `16`, `10` epochs, weight decay `0.01`, maximum sequence length `512`, and F1-based checkpoint selection.
 
 ## 04. Results
 
@@ -116,24 +116,24 @@ XGBoost attained the highest reported test F1 (**0.77**). BERT and RoBERTa had s
 
 ![Logistic Regression coefficients](docs/images/final/final-logistic-coefficients.jpg)
 
-**Top three positive Logistic Regression coefficients:**
+**Leading positive Logistic Regression coefficients in the detailed full report (p. 38):**
 
-1. **Medications_Midazolam (Versed)_used_1.0:** Midazolam is used for sedation, anxiety relief, or anesthesia during intensive and emergency care. Its positive coefficient may reflect clinical severity and associated interventions; it does not establish that the medication causes mortality.
-2. **Patient Weight:** Body weight can relate to cardiovascular and metabolic status and medication management. A positive model coefficient alone does not determine distinct risks for obesity and low body weight.
-3. **Significant Events_Cardiac Arrest_total_count:** Counts recorded cardiac arrest events. Its positive coefficient indicates an association between cardiac-arrest event frequency and the model's predicted mortality outcome.
+1. **3-Significant Events_Cardiac Arrest_total_count:** Frequency of cardiac-arrest events.
+2. **Medications_Midazolam (Versed)_used_1.0:** Midazolam exposure recorded during treatment.
+3. **Labs_Uric Acid_total_count:** Frequency of uric-acid tests, potentially reflecting metabolic or renal monitoring.
 
-These coefficients represent associations in this fitted model, not causal effects.
+The existing coefficient image is retained from the summary-version analysis and differs in ranking. Coefficients show model associations rather than causal effects.
 
 ![XGBoost feature importance](docs/images/final/final-xgboost-importance.jpg)
 
-**Top four XGBoost features:**
+**Top four XGBoost features in the detailed full report (p. 39):**
 
-1. **Respiratory_O2 Flow_used:** Records whether oxygen was supplied, potentially reflecting respiratory care needs.
-2. **Treatments_Head of Bed_total_count:** Counts head-of-bed positioning events that may support breathing and aspiration prevention.
-3. **Respiratory_O2 saturation pulseoxymetry_total_count:** Counts oxygen saturation measurements and may reflect monitoring intensity.
-4. **Routine Vital Signs_Heart Rhythm_total_count:** Counts heart-rhythm observations, reflecting cardiovascular monitoring frequency.
+1. **Respiratory_O2 Flow_used:** Oxygen supply status.
+2. **Neurological_Orientation_total_count:** Frequency of neurological orientation observations.
+3. **Pain/Sedation_Pain Present_total_count:** Frequency of recorded pain observations.
+4. **Respiratory_O2 saturation pulseoxymetry_total_count:** Frequency of pulse oximetry measurements.
 
-These variables describe treatment and monitoring patterns. Feature importance is not evidence of causation.
+The retained feature-importance image comes from the summary version and shows a different ranking. Feature importance describes model reliance, not causality or effect direction.
 
 [Detailed results and interpretation](docs/results.md)
 
