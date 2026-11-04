@@ -104,24 +104,13 @@ For complete validation/test metrics and the discrepancy between detailed experi
 
 ![Logistic Regression coefficients](docs/images/final/final-logistic-coefficients.jpg)
 
-**Leading positive Logistic Regression coefficients in the displayed chart:**
-
-1. **Medications_Midazolam (Versed)_used_1.0:** Midazolam use may reflect sedation or intensive-care interventions.
-2. **patientweight:** Patient weight; the coefficient does not separately establish effects of high and low body weight.
-3. **3-Significant Events_Cardiac Arrest_total_count:** Frequency of recorded cardiac arrest events.
-
-**Labs_Uric Acid_total_count** is also among the leading positive coefficients. These are associations in the fitted model, not causal evidence.
+The chart highlights positive coefficients for **Midazolam use, patient weight, and cardiac-arrest event counts**, with **uric-acid testing** also prominent.
 
 ![XGBoost feature importance](docs/images/final/final-xgboost-importance.jpg)
 
-**Top four XGBoost features in the displayed chart:**
+The highest-importance features relate to **oxygen flow, head-of-bed adjustments, pulse oximetry, and heart-rhythm monitoring**. These are predictive associations, not evidence of causation.
 
-1. **Respiratory_O2 Flow_used:** Oxygen-supply status.
-2. **Treatments_Head of Bed_total_count:** Head-of-bed adjustment frequency.
-3. **Respiratory_O2 saturation pulseoxymetry_total_count:** Pulse oximetry measurement frequency.
-4. **Routine Vital Signs_Heart Rhythm_total_count:** Heart-rhythm observation frequency.
-
-Each has importance score **4.0** in the displayed chart. Feature importance does not indicate causation or the direction of an effect.
+[Detailed feature interpretation](docs/results.md#model-interpretation)
 
 ## 05. Limitations and Future Work
 
