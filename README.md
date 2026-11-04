@@ -69,7 +69,7 @@ Elapsed time is measured from admission. Only events with `0 <= elapsed_time < 1
 
 | Sequence field | Description | Model role |
 | --- | --- | --- |
-| `hospital_expire_flag` | Sequence outcome label; confirm whether it was redefined for the 120-hour task | Target |
+| `hospital_expire_flag` | Sequence label modified during preprocessing for the 120-hour outcome | Target |
 | `hadm_id` | Unique hospital admission ID | Record grouping |
 | `elapsed_time` | Hours since admission | Chronological ordering only |
 | `event_type` | Event type (e.g., `admittime`, `charttime`) | Text input |
