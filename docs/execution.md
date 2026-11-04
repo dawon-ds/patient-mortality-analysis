@@ -2,13 +2,13 @@
 
 ## Dependencies
 
-Install requirements.txt in a private Python environment. Transformer notebooks require a compatible PyTorch/CUDA environment and memory suitable for BERT/RoBERTa. The original report used Python 3.8.18, PyTorch 2.0.1+cu117, and Transformers 4.41.2 for sequence experiments.
+Install the dependencies listed in requirements.txt. Transformer notebooks require a compatible PyTorch/CUDA environment and memory suitable for BERT/RoBERTa. The original report used Python 3.8.18, PyTorch 2.0.1+cu117, and Transformers 4.41.2 for sequence experiments.
 
 ## Data and Working Directory
 
-Use only independently authorized clinical data. The original sequence workflow expects train/, test/, and dictionary/ directories relative to its working directory, and generates train_F/ and test_F/ intermediates. Keep these directories private and outside tracked source files.
+The workflow expects the MIMIC CSV tables and item dictionary at the configured working paths. The original sequence workflow expects train/, test/, and dictionary/ directories relative to its working directory, and generates train_F/ and test_F/ intermediates. 
 
-Raw tables use _train.csv and _test.csv suffixes; dictionary/d_items.csv supplies item labels. The final tabular notebook reads private CSV inputs from `PATIENT_DATA_ROOT` (default: `data/` under the working directory). For example, set `PATIENT_DATA_ROOT=/secure/path/to/mimic` before running it. Its `merged_data/` inputs are resolved beneath the same root. It also writes relative JSON/CSV intermediates; review output locations before execution. `original_analysis.ipynb` is kept as a historical notebook and retains its original Colab `/content/` paths.
+Raw tables use _train.csv and _test.csv suffixes; dictionary/d_items.csv supplies item labels. The final tabular notebook reads CSV inputs from `PATIENT_DATA_ROOT` (default: `data/` under the working directory). For example, set `PATIENT_DATA_ROOT=/path/to/mimic` before running it. Its `merged_data/` inputs are resolved beneath the same root. It also writes relative JSON/CSV intermediates; review output locations before execution. `original_analysis.ipynb` is kept as a historical notebook and retains its original Colab `/content/` paths.
 
 ## Order
 
@@ -21,6 +21,6 @@ The notebooks have sequential cell dependencies. They are not converted into an 
 
 ## Verification and Boundaries
 
-Notebook JSON and Python-cell syntax were checked, excluding IPython magics. Stored outputs and metadata were removed before publication.
+Notebook JSON and Python-cell syntax were checked, excluding IPython magics. The notebooks contain source code for reproducing the described processing steps.
 
-Review label construction, observation windows, feature fitting, and patient-group splitting before interpreting the models as prospective predictions. Read data-security.md before using or sharing any generated output.
+Review label construction, observation windows, feature fitting, and patient-group splitting before interpreting the models as prospective predictions.
