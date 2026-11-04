@@ -31,7 +31,7 @@ The final report compares ICU length of stay: approximately **1.2 days** for pat
 
 1. **Data integration:** Join tables using `subject_id` / `hadm_id`; sort admission events by time; consolidate records into JSON and convert them to training and test CSV files.
 2. **Feature construction:** Use `d_items` labels/categories to derive label usage, event frequency, mean event duration, and average ICU length of stay.
-3. **Feature filtering:** The report lists **5,240 constructed columns**, **1,330 removed for high missingness**, and **420 removed as constant columns**. It separately reports approximately **3,900 final features**; these counts do not reconcile by simple subtraction and need verification.
+3. **Feature filtering:** The reports list **5,240 constructed columns**, **1,330 removed for missingness**, **420 constant columns removed**, and approximately **3,900 final features**. Direct subtraction yields **3,490**; this is an unresolved inconsistency in the source documents, not a verified final dimensionality.
 4. **Target:** `Dead_within_120_hours`. `hospital_expire_flag` and `survival_hours` were excluded from tabular predictors.
 
 | Feature | Meaning |
