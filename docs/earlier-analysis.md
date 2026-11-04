@@ -16,7 +16,7 @@ The dataset integrated multiple types of clinical information, including demogra
 
 ## Data Integration
 
-Clinical tables were merged using patient identifiers to build a patient-level analysis table. Because the original data contains real-patient medical information, the raw tables and any patient-level samples are excluded from this public repository.
+Clinical tables were merged using patient identifiers to build a patient-level analysis table. 
 
 ## Preprocessing
 
