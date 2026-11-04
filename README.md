@@ -126,7 +126,14 @@ These coefficients represent associations in this fitted model, not causal effec
 
 ![XGBoost feature importance](docs/images/final/final-xgboost-importance.jpg)
 
-The report highlights **oxygen flow use**, **head-of-bed adjustment count**, **pulse oximetry measurement count**, and **heart-rhythm observation count**. Coefficients and importances describe predictive associations rather than medical causality.
+**Top four XGBoost features:**
+
+1. **Respiratory_O2 Flow_used:** Records whether oxygen was supplied, potentially reflecting respiratory care needs.
+2. **Treatments_Head of Bed_total_count:** Counts head-of-bed positioning events that may support breathing and aspiration prevention.
+3. **Respiratory_O2 saturation pulseoxymetry_total_count:** Counts oxygen saturation measurements and may reflect monitoring intensity.
+4. **Routine Vital Signs_Heart Rhythm_total_count:** Counts heart-rhythm observations, reflecting cardiovascular monitoring frequency.
+
+These variables describe treatment and monitoring patterns. Feature importance is not evidence of causation.
 
 [Detailed results and interpretation](docs/results.md)
 
