@@ -116,7 +116,13 @@ XGBoost attained the highest reported test F1 (**0.77**). BERT and RoBERTa had s
 
 ![Logistic Regression coefficients](docs/images/final/final-logistic-coefficients.jpg)
 
-Top positive Logistic Regression coefficients mentioned in the report include **Midazolam (Versed) use**, **patient weight**, and **cardiac arrest event count**.
+**Top three positive Logistic Regression coefficients:**
+
+1. **Medications_Midazolam (Versed)_used_1.0:** Midazolam is used for sedation, anxiety relief, or anesthesia during intensive and emergency care. Its positive coefficient may reflect clinical severity and associated interventions; it does not establish that the medication causes mortality.
+2. **Patient Weight:** Body weight can relate to cardiovascular and metabolic status and medication management. A positive model coefficient alone does not determine distinct risks for obesity and low body weight.
+3. **Significant Events_Cardiac Arrest_total_count:** Counts recorded cardiac arrest events. Its positive coefficient indicates an association between cardiac-arrest event frequency and the model's predicted mortality outcome.
+
+These coefficients represent associations in this fitted model, not causal effects.
 
 ![XGBoost feature importance](docs/images/final/final-xgboost-importance.jpg)
 
