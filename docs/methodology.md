@@ -10,7 +10,7 @@ The project predicts death within **120 hours after the patient's last hospital 
 2. Sort all events within an admission in chronological order; merge records into JSON and export structured train/test CSV files.
 3. Map `itemid` to category and label through `d_items.csv`.
 4. Engineer `label_used`, `label_total_count`, `label_avg_time`, and `icu_avg_los`, alongside demographics and weight.
-5. The report lists 5,240 columns after feature construction, removal of 1,330 columns with at least 80% missingness, and removal of 420 constant columns. It separately describes approximately 3,900 final features. The reported totals do not reconcile by simple subtraction, so the exact final feature count needs confirmation.
+5. Both reports state 5,240 constructed columns, 1,330 columns removed for at least 80% missingness, 420 constant columns removed, and approximately 3,900 final features. Simple subtraction is 3,490, so the feature-count discrepancy originates in the reports; the true final dimensionality cannot be established from those reported figures alone.
 6. `Dead_within_120_hours` is the tabular target. `hospital_expire_flag` and `survival_hours` are excluded from predictors.
 
 ### Tabular Models
@@ -24,13 +24,13 @@ XGBoost and Logistic Regression were evaluated using grid search and five-fold c
 
 1. Join admission and event tables by `hadm_id`. Map timestamp types (`admittime`, `charttime`, etc.) to `event_type`, storing the start timestamp as `event_time`.
 2. Consolidate `itemid`, `value`, and `amount` into intermediate event records; missing attributes are set to zero.
-3. Compute `elapsed_time` since admission and keep events in `[0, 120)` hours.
+3. Compute `elapsed_time` since admission. The full report states that admissions with `elapsed_time >= 120` have their `hospital_expire_flag` changed to 0; then retain only events within `[0, 120)` hours. This explicitly modifies the original in-hospital mortality label for the sequence experiment.
 4. When an admission has at least 200 events, select important `itemid` entries based on differences in usage ratio between outcome groups.
 5. Form a text sequence from each `event_type` and mapped `itemid` label.
 
 | Field | Description | Final model role |
 | --- | --- | --- |
-| `hospital_expire_flag` | Binary 120-hour outcome in the sequence workflow | Label |
+| `hospital_expire_flag` | Modified in the sequence workflow to represent death before 120 hours | Label |
 | `hadm_id` | Hospital admission ID | Grouping |
 | `elapsed_time` | Hours after admission | Ordering only |
 | `event_type` | Timestamp/event type | Text input |
