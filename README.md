@@ -44,6 +44,12 @@ The final report compares ICU length of stay: approximately **1.2 days** for pat
 | `label_avg_time` | Average event duration |
 | `Dead_within_120_hours` | Binary outcome (target) |
 
+### Model Selection Rationale
+
+- **XGBoost:** Captures nonlinear relationships and interactions among tabular clinical features.
+- **Logistic Regression:** Provides interpretable coefficients to examine associations between predictors and the outcome.
+- **BERT and RoBERTa:** Test whether chronological clinical events, serialized as text, can provide useful contextual information for classification.
+
 ### Tabular modeling
 
 XGBoost and Logistic Regression were compared using five-fold cross-validated grid search. The report describes a **64% training / 16% validation / 20% test** split.
@@ -99,6 +105,12 @@ The report lists **6,478 training admissions** and **390 test admissions** (last
 | RoBERTa | 0.6769 | 0.4582 | 0.6769 | 0.5465 |
 
 XGBoost attained the highest reported test F1 (**0.77**). BERT and RoBERTa had substantially higher validation than test performance. Data sampling and split conventions were not identical across tabular and sequence branches, so this comparison does not isolate model architecture as the sole cause of the difference.
+
+### Key Findings
+
+- **Best test performance:** XGBoost achieved the highest reported Test F1 (**0.77**) across the four models.
+- **Validation–test gap:** BERT and RoBERTa reached Validation F1 scores of **0.8904** and **0.8712**, respectively, but Test F1 dropped to **0.6566** and **0.5465**. This highlights the importance of held-out evaluation.
+- **Input representation and evaluation conditions:** The final event-text input did not incorporate quantitative measurements or learned elapsed-time embeddings. Differences in admission selection and splitting also limit direct architectural comparisons.
 
 ### Model interpretation
 
