@@ -8,7 +8,7 @@ Install requirements.txt in a private Python environment. Transformer notebooks 
 
 Use only independently authorized clinical data. The original sequence workflow expects train/, test/, and dictionary/ directories relative to its working directory, and generates train_F/ and test_F/ intermediates. Keep these directories private and outside tracked source files.
 
-Raw tables use _train.csv and _test.csv suffixes; dictionary/d_items.csv supplies item labels. The tabular notebook preserves Colab/Google Drive paths: run in Colab or adapt those paths and the Drive mount cell to your private environment. It also writes relative JSON/CSV intermediates. Review path assignments before execution.
+Raw tables use _train.csv and _test.csv suffixes; dictionary/d_items.csv supplies item labels. The final tabular notebook reads private CSV inputs from `PATIENT_DATA_ROOT` (default: `data/` under the working directory). For example, set `PATIENT_DATA_ROOT=/secure/path/to/mimic` before running it. Its `merged_data/` inputs are resolved beneath the same root. It also writes relative JSON/CSV intermediates; review output locations before execution. `original_analysis.ipynb` is kept as a historical notebook and retains its original Colab `/content/` paths.
 
 ## Order
 
