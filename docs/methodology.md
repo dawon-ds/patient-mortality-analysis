@@ -17,7 +17,7 @@ The project predicts death within **120 hours after the patient's last hospital 
 
 XGBoost and Logistic Regression were evaluated using grid search and five-fold cross-validation. The reported train/validation/test split is 64%/16%/20%.
 
-- XGBoost: 324 combinations; selected `n_estimators=100`, `max_depth=3`, `learning_rate=0.2`, `subsample=0.8`, `colsample_bytree=0.8`, `gamma=5`.
+- XGBoost: 324 combinations; the detailed tuned experiment (full report pp. 34–35) selected `n_estimators=150`, `max_depth=3`, `learning_rate=0.2`, `subsample=0.8`, `colsample_bytree=1.0`, `gamma=5`. The full report's later setup summary instead gives `n_estimators=100` and `colsample_bytree=0.8`.
 - Logistic Regression: 30 combinations; selected `C=0.01`, `max_iter=100`, `penalty=l2`, `solver=lbfgs`.
 
 ## Sequence Preprocessing and Modeling
@@ -37,7 +37,7 @@ XGBoost and Logistic Regression were evaluated using grid search and five-fold c
 | `itemid` | Dictionary-mapped clinical item label | Text input |
 | `value` | Event value or amount (zero if absent) | Intermediate only |
 
-The report describes **6,478 training admissions** and **390 test admissions** (last admission per test patient). The training data was split 80:20 into train/validation. BERT and RoBERTa were fine-tuned for 10 epochs with learning rate `2e-5`, batch size 16, weight decay `0.01`, maximum 512 input tokens, and best-checkpoint selection by F1.
+The detailed report describes **6,478 training admissions across 1,615 patients** (all admissions in the training group) versus **390 test admissions across 390 patients** (only each test patient's final admission). The training data was split 80:20 into train/validation. BERT and RoBERTa were fine-tuned for 10 epochs with learning rate `2e-5`, batch size 16, weight decay `0.01`, maximum 512 input tokens, and best-checkpoint selection by F1.
 
 ## Evaluation Boundaries
 
