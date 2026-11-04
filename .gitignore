@@ -34,3 +34,5 @@ results/
 logs/
 checkpoints/
 *.log
+.env.*
+!.env.example
